@@ -26,4 +26,5 @@ public class ElectronicScale extends AbstractElectronicScale {
 	public ElectronicScale() {
 		super(MASS_LIMIT, SENSITIVITY);
 	}
+	
 }
