@@ -8,7 +8,7 @@ import com.thelocalmarketplace.hardware.BarcodedProduct;
 import com.thelocalmarketplace.hardware.external.ProductDatabases;
 import ca.ucalgary.seng300.simulation.*;
 import java.math.BigDecimal;
-
+import com.thelocalmarketplace.hardware.external.*;
 
 
 public class SelfCheckoutSession {
@@ -16,7 +16,7 @@ public class SelfCheckoutSession {
 	private int totalCartPrice = 0;
 	private double expectedWeightOfCart = 0;
 	private double actualWeightOfCart = 0;
-	private Map<Barcode, BarcodedProduct> barcodeMap;
+	private ProductDatabases barcodeMap;
 	private Bigdecimal actualWeightOfCart;
 	private BigDecimal expectedWeightOfCart;
 	private BigDecimal actualMass;
@@ -42,7 +42,7 @@ public class SelfCheckoutSession {
 		
 		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(itemBarcode);
 		expectedMass = product.getExpectedWeight();
-		expectedWeightOfCart += itemActualMass;
+		expectedWeightOfCart += expectedMass;
 		double price = barcodeMap.get(product);
 		totalCartPrice += price;
 		
