@@ -26,6 +26,11 @@ public class SelfCheckoutSession {
 		return;
 	}
 	
+	//simple WeightDiscrepancyDetected to change isBlocked
+	public void WeightDiscrepancyDetected(boolean value) {
+		isBlocked = value;
+	}
+	
 	/**Precondition: StartSession() has already been called**/
 	//method for when weight discrepancy is detected
 	public void WeightDiscrepancyDetected() {
