@@ -146,7 +146,8 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 
 	@Override
 	public void validCoinDetected(CoinValidator validator, BigDecimal value) {
-		coinEntered = coinEntered.add(value);
+		coinEntered = value;
+	}
 	}
 
 	@Override
