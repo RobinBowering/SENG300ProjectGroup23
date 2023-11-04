@@ -6,119 +6,79 @@
 
 
 package com.thelocalmarketplace.software;
-import com.jjjwelectronics.IDevice;
-import com.jjjwelectronics.IDeviceListener;
-import com.jjjwelectronics.Mass;
-import com.jjjwelectronics.scale.ElectronicScaleListener;
-import com.jjjwelectronics.scale.IElectronicScale;
-import com.jjjwelectronics.scanner.Barcode;
-import com.jjjwelectronics.scanner.BarcodeScannerListener;
-import com.jjjwelectronics.scanner.IBarcodeScanner;
-import com.tdc.IComponent;
-import com.tdc.IComponentObserver;
-import com.tdc.coin.CoinStorageUnit;
-import com.tdc.coin.CoinStorageUnitObserver;
 
-public class SelfCheckoutController implements CoinStorageUnitObserver, ElectronicScaleListener, BarcodeScannerListener {
+import com.thelocalmarketplace.hardware.SelfCheckoutStation;
+
+/**
+ * 
+ * @author Robin Bowering UCID 30123373
+ * @author Kelvin Jamila UCID 30117164
+ * @author Nikki Kim UCID 30189188
+ * @author Hillary Nguyen UCID 30161137
+ * @author Matt Gibson UCID 30117091
+ * 
+ * Class responsible for starting sessions and managing hardware activity outside of sessions
+ * 
+ * Should be constructed with a configured Self-Checkout machine. Does not configure any hardware besides enabling and disabling where appropriate
+ */
+public class SelfCheckoutController {
 	
-	public SelfCheckoutSession StartSession() {
-		return null;
-	}
-
-	@Override
-	public void enabled(IComponent<? extends IComponentObserver> component) {
-		// TODO Auto-generated method stub
+	SelfCheckoutStation hardware;
+	
+	/**
+	 * State variable indicating whether an active session is in progress
+	 */
+	boolean activeSession = false;
+	
+	/**
+	 * Takes a SelfCheckoutMachine that is plugged in and turned on and associates it with a field in new controller
+	 */
+	public SelfCheckoutController(SelfCheckoutStation station) {
+		hardware = station;
 		
+		disableAll();
 	}
+	
 
-	@Override
-	public void disabled(IComponent<? extends IComponentObserver> component) {
-		// TODO Auto-generated method stub
+	
+	/**
+	 * If there is no session in progress, instantiates a SelfCheckoutSession and registers it as a listener for appropriate hardware
+	 */
+	public void startSession() {
 		
+		if (!activeSession) {
+			
+			activeSession = true;
+			
+			SelfCheckoutSession session = new SelfCheckoutSession(hardware,this);
+			
+			hardware.baggingArea.register(session);
+			hardware.scanner.register(session);
+			hardware.coinSlot.attach(session);
+			hardware.coinValidator.attach(session);
+			hardware.coinStorage.attach(session);
+			
+		}		
 	}
-
-	@Override
-	public void turnedOn(IComponent<? extends IComponentObserver> component) {
-		// TODO Auto-generated method stub
-		
+	
+	/**
+	 * Changes controller and accessible hardware to non-active-session state
+	 */
+	public void sessionEnded() {
+		activeSession = false;
+		disableAll();
 	}
-
-	@Override
-	public void turnedOff(IComponent<? extends IComponentObserver> component) {
-		// TODO Auto-generated method stub
-		
+	
+	/**
+	 * Disables non-touchscreen hardware until a session is started
+	 */
+	private void disableAll() {
+		hardware.baggingArea.disable();
+		hardware.scanner.disable();
+		hardware.coinSlot.disable();
+		hardware.coinValidator.disable();
+		hardware.coinStorage.disable();
 	}
-
-	@Override
-	public void aDeviceHasBeenEnabled(IDevice<? extends IDeviceListener> device) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void aDeviceHasBeenDisabled(IDevice<? extends IDeviceListener> device) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void aDeviceHasBeenTurnedOn(IDevice<? extends IDeviceListener> device) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void aDeviceHasBeenTurnedOff(IDevice<? extends IDeviceListener> device) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void aBarcodeHasBeenScanned(IBarcodeScanner barcodeScanner, Barcode barcode) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void theMassOnTheScaleHasChanged(IElectronicScale scale, Mass mass) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void theMassOnTheScaleHasExceededItsLimit(IElectronicScale scale) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void theMassOnTheScaleNoLongerExceedsItsLimit(IElectronicScale scale) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void coinsFull(CoinStorageUnit unit) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void coinAdded(CoinStorageUnit unit) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void coinsLoaded(CoinStorageUnit unit) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void coinsUnloaded(CoinStorageUnit unit) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 }
+	
