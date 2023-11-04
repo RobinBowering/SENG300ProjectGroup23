@@ -73,7 +73,6 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	
 	//method to add item to cart
 	public void AddItem(BarcodedItem item) throws exception {
-		new BarcodeScanner scanner; // Delete this when you added to main, I used it so I could call
 		try {scanner.scan(item);} // Try and scan an item
 		catch {exception e} // Catches an exception
 		throw new NullPointerExcption(); // Throws a null pointer exception from simulation package
