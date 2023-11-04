@@ -1,38 +1,47 @@
 package com.thelocalmarketplace.software;
 
-import java.math.BigDecimal;
-
-import com.jjjwelectronics.IDevice;
-import com.jjjwelectronics.IDeviceListener;
-import com.jjjwelectronics.Mass;
-import com.jjjwelectronics.scale.ElectronicScaleListener;
-import com.jjjwelectronics.scale.IElectronicScale;
-import com.jjjwelectronics.scanner.Barcode;
-import com.jjjwelectronics.scanner.BarcodeScannerListener;
-import com.jjjwelectronics.scanner.IBarcodeScanner;
-import com.tdc.IComponent;
-import com.tdc.IComponentObserver;
-import com.tdc.coin.*;
 import com.thelocalmarketplace.hardware.SelfCheckoutStation;
-import com.thelocalmarketplace.hardware.external.ProductDatabases;
 
+/**
+ * 
+ * @author Robin Bowering UCID 30123373
+ * @author Kelvin Jamila UCID 30117164
+ * @author Nikki Kim UCID 30189188
+ * @author Hillary Nguyen UCID 30161137
+ * @author Matt Gibson UCID 30117091
+ * 
+ * Class responsible for starting sessions and managing hardware activity outside of sessions
+ * 
+ * Should be constructed with a configured Self-Checkout machine. Does not configure any hardware besides enabling and disabling where appropriate
+ */
 public class SelfCheckoutController {
 	
 	SelfCheckoutStation hardware;
 	
 	/**
-	 * Takes a SelfCheckoutMachine that is plugged in and turned on
+	 * State variable indicating whether an active session is in progress
+	 */
+	boolean activeSession = false;
+	
+	/**
+	 * Takes a SelfCheckoutMachine that is plugged in and turned on and associates it with a field in new controller
 	 */
 	public SelfCheckoutController(SelfCheckoutStation station) {
 		hardware = station;
+		
+		disableAll();
 	}
 	
+
+	
 	/**
-	 * Confirms that all needed hardware is enabled, and instantiates a SelfCheckoutSession if so
+	 * If there is no session in progress, instantiates a SelfCheckoutSession and registers it as a listener for appropriate hardware
 	 */
 	public void startSession() {
 		
-		if (allEnabled()) {
+		if (!activeSession) {
+			
+			activeSession = true;
 			
 			SelfCheckoutSession session = new SelfCheckoutSession(hardware,this);
 			
@@ -41,14 +50,27 @@ public class SelfCheckoutController {
 			hardware.coinSlot.attach(session);
 			hardware.coinValidator.attach(session);
 			hardware.coinStorage.attach(session);
-		}
-		
-	}
-	private boolean allEnabled() {
-		if ( !hardware.baggingArea.isDisabled() ) {
-			if ( !hardware.baggingArea)
-		}
 			
+		}		
+	}
+	
+	/**
+	 * Changes controller and accessible hardware to non-active-session state
+	 */
+	public void sessionEnded() {
+		activeSession = false;
+		disableAll();
+	}
+	
+	/**
+	 * Disables non-touchscreen hardware until a session is started
+	 */
+	private void disableAll() {
+		hardware.baggingArea.disable();
+		hardware.scanner.disable();
+		hardware.coinSlot.disable();
+		hardware.coinValidator.disable();
+		hardware.coinStorage.disable();
 	}
 	
 }
