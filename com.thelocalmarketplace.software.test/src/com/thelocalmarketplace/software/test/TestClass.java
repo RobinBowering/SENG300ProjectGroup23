@@ -9,11 +9,11 @@ import powerutility.*;
 public class TestClass {
 	
 	SelfCheckoutStation station = new SelfCheckoutStation();
-	PowerGrid grid = PowerGrid.instance();
 
 	@Before public void setup() {
-		station.plugIn(grid);
+		station.plugIn(PowerGrid.instance());
 		station.turnOn();
+		//station.configure
 		
 	}
 	
