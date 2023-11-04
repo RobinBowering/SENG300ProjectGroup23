@@ -40,7 +40,6 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	
 	SelfCheckoutController controller;
 	
-	ArrayList<Item> order = new ArrayList<Item>();
 	BigDecimal orderTotal = BigDecimal.ZERO;
 	BigDecimal amountPaid = BigDecimal.ZERO;
 	
@@ -48,7 +47,6 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	private boolean payingForOrder = false;
 
 	// Kelvin's Added variables
-	private ProductDatabases barcodeMap;
 	private BigDecimal actualMassOnScale;
 	private BigDecimal expectedMassOnScale;
 	private BigDecimal expectedMass;
