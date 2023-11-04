@@ -2,10 +2,13 @@ package com.thelocalmarketplace.software;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 import com.thelocalmarketplace.*;
 import com.thelocalmarketplace.hardware.SelfCheckoutStation;
 import com.jjjwelectronics.IDevice;
 import com.jjjwelectronics.IDeviceListener;
+import com.jjjwelectronics.Item;
 import com.jjjwelectronics.Mass;
 import com.jjjwelectronics.scale.ElectronicScale;
 import com.jjjwelectronics.scale.ElectronicScaleListener;
@@ -32,7 +35,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	BigInteger actualMass;
 	
 	ArrayList<Item> order = new ArrayList<Item>();
-	
+	double total = 0;
 	
 	private boolean isBlocked = false;
 	
