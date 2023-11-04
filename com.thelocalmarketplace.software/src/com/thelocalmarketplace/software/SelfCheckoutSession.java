@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.jjjwelectronics.Item;
+import com.jjjwelectronics.scanner.BarcodeScanner;
 import com.tdc.coin.CoinSlot;
 
 public class SelfCheckoutSession {
@@ -10,6 +11,7 @@ public class SelfCheckoutSession {
 	Scanner userInput = new Scanner(System.in);
 	
 	CoinSlot coinslot = new CoinSlot();
+	BarcodeScanner scanner = new BarcodeScanner();
 	
 	private boolean isBlocked = false;
 	
@@ -37,12 +39,15 @@ public class SelfCheckoutSession {
 	public void WeightDiscrepancyDetected() {
 		isBlocked = true;
 		coinslot.disable();
+		scanner.disable();
 	}
 	
 	//another method to actually remove weight discrepancy, instead of using the first one
 	public void WeightDiscrepancyRemoved() {
 		isBlocked = false;
 		coinslot.enable();
+		scanner.enable();
+	
 	}
 		
 }
