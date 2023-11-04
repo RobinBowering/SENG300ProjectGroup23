@@ -72,10 +72,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	}
 	
 	//method to add item to cart
-	public void AddItem(BarcodedItem item) throws exception {
-		try {scanner.scan(item);} // Try and scan an item
-		catch {exception e} // Catches an exception
-		throw new NullPointerExcption(); // Throws a null pointer exception from simulation package
+	public void AddItem(BarcodedItem item) {
 		
 		actualMass = item.getMass().inGrams(); //Actual mass of the item scanned in 
 		Barcode itemBarcode = item.getBarcode(); //Gets the barcode of the scanned item
