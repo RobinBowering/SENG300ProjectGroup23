@@ -33,9 +33,6 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	
 	SelfCheckoutController controlller;
 	
-	int OPEN_SESSION = 0;
-	int WEIGHT_DISCREPANCY = 1;
-	int PAYING_WITH_COIN = 2;
 	
 	BarcodeScanner scanner;
 	CoinStorageUnit coinStorage;
@@ -47,7 +44,8 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	BigDecimal total = BigDecimal.ZERO;
 	BigDecimal coinEntered = BigDecimal.ZERO;
 	
-	private int blockedState = 0;
+	private boolean weightDiscrepancy = false;
+	private boolean payingForOrder = false;
 
 	// Kelvin's Added variables
 	private ProductDatabases barcodeMap;
@@ -61,10 +59,15 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	 * @param The self checkout controller which called the constructor
 	 */
 	public SelfCheckoutSession(SelfCheckoutStation station, SelfCheckoutController instantiator) {
+		
 		scale = station.baggingArea;
+		
 		scanner = station.scanner;
+		
 		validator = station.coinValidator;
+		
 		coinslot = station.coinSlot;
+		
 		coinStorage = station.coinStorage;
 		
 	}
@@ -113,16 +116,53 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	
 	//method for when weight discrepancy is detected
 	public void weightDiscrepancyDetected() {
-		blockedState = 0;
+		scanner.disable();
+		if (payingForOrder) {
+			coinslot.disable();
+		}
+		
+		weightDiscrepancy = true;
 		System.out.println("Customer screen: Weight discrepancy detected.");
 		System.out.println("Attendant screen: Weight discrepancy detected.");
 	}
 	
-	public void discrepancyCheck() throws OverloadedDevice {
-		actualMassOnScale = scale.getCurrentMassOnTheScale().inGrams();
+	public void weightDiscrepancyEnded() {
+		scanner.enable();
+		if (payingForOrder) {
+			coinslot.enable();
+		}
 		
-		if (true) {}
+		weightDiscrepancy = false;
+		System.out.println("Customer screen: Weight discrepancy resolved.");
+		System.out.println("Attendant screen: Weight discrepancy resolved.");
 		
+	}
+	
+	public void discrepancyCheck() {
+		
+		try {
+			actualMassOnScale = scale.getCurrentMassOnTheScale().inGrams();
+		} catch (OverloadedDevice sadScale) {
+			weightDiscrepancyDetected();
+			System.out.println("SCALE OVERLOADED. PLEASE REMOVE WEIGHT AND ALERT STAFF");
+			return;
+		}
+		
+		BigDecimal difference = actualMassOnScale.subtract(expectedMassOnScale);
+		BigDecimal sensitivity = scale.getSensitivityLimit().inGrams();
+		
+		
+		if (!weightDiscrepancy) {
+				
+			if (difference.compareTo(sensitivity) > 0) {
+					weightDiscrepancyDetected();
+					return;
+			}
+		}
+		
+		if (difference.compareTo(sensitivity) < 0) {
+					weightDiscrepancyEnded();
+			}
 		
 	}
 
@@ -193,7 +233,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 
 	@Override
 	public void theMassOnTheScaleHasChanged(IElectronicScale scale, Mass mass) {
-		// TODO Auto-generated method stub
+		discrepancyCheck();
 		
 	}
 
