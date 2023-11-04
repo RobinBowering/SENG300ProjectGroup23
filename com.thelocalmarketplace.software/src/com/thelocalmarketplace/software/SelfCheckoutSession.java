@@ -6,14 +6,18 @@ import com.jjjwelectronics.Item;
 import com.jjjwelectronics.scanner.*;
 import com.thelocalmarketplace.hardware.BarcodedProduct;
 import com.thelocalmarketplace.hardware.external.ProductDatabases;
-
+import ca.ucalgary.seng300.simulation.*;
+import java.math.BigDecimal;
 
 
 
 public class SelfCheckoutSession {
 	ArrayList<Item> order = new ArrayList<Item>();
-	private double weightOfCart = 0;
+	private int totalCartPrice = 0;
+	private double expectedWeightOfCart = 0;
+	private double actualWeightOfCart = 0;
 	private Map<Barcode, BarcodedProduct> barcodeMap;
+	private Bigdecimal value;
 	
 	
 	private boolean isBlocked = false;
@@ -28,16 +32,18 @@ public class SelfCheckoutSession {
 		new BarcodeScanner scanner;
 		try {scanner.scan(item);}
 		catch {exception e}
-		throw new NullPointException;
+		throw new NullPointerExcption();
 		
-		double itemActualMass = item.getMass().inGrams().doubleValue();
+		value = item.getMass().inGrams();
 		Barcode itemBarcode = item.getBarcode();
 		
 		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(itemBarcode);
 		double expectedMass = product.getExpectedWeight();
-		weightOfCart += itemActualMass;
+		expectedWeightOfCart += itemActualMass;
+		double price = barcodeMap.get(product);
+		totalCartPrice += price;
 		
-		if (weightOfCart )
+		WeightDiscrepancyDetected()	
 		
 		return;
 	}
