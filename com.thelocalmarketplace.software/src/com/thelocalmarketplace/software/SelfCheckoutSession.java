@@ -50,17 +50,30 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 BarcodeScannerListener {
 	
 	/**
-	 * Barcode Scanner of self checkout machine, representative of hardware
+	 * Barcode Scanner of associated self checkout machine, representative of hardware
 	 * component
 	 */
 	BarcodeScanner scanner;
 	/**
-	 * Coin Storage Unit of self checkout machine, representative of 
+	 * Coin Storage Unit of associated self checkout machine, representative of 
 	 * hardware component
 	 */
 	CoinStorageUnit coinStorage;
+	/**
+	 * Coin Validator of associated self checkout machine, representative of hardware
+	 * component
+	 */
 	CoinValidator validator;
+	/**
+	 * Coin Slot of associated self checkout machine, representative of hardware
+	 * component
+	 */
 	CoinSlot coinslot;
+	
+	/**
+	 * Electronic Scale in bagging area of associated self checkout machine, representative of hardware
+	 * component
+	 */
 	ElectronicScale scale;
 	
 	/**
@@ -98,7 +111,6 @@ BarcodeScannerListener {
 	 * Expected mass based on sum of all items in order's mass
 	 */
 	private BigDecimal expectedMassOnScale;
-	private BigDecimal expectedMass;
 	
 	/**
 	 * Instantiates a Self Checkout Session with all hardware enabled except coinslot
@@ -141,10 +153,10 @@ BarcodeScannerListener {
 	 */
 	public void addItem(Barcode barcode) {
 		
-		if (payingForOrder) {return;}
+		if (payingForOrder) {return;} //barcode scanner should be disabled anyways, but just in case
 		
 		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(barcode); // Gets the database of the barcode
-		expectedMass = BigDecimal.valueOf(product.getExpectedWeight()); // Gets expected weight of item
+		BigDecimal expectedMass = BigDecimal.valueOf(product.getExpectedWeight()); // Gets expected weight of item
 		BigDecimal price = BigDecimal.valueOf(product.getPrice()); // get the price from the database
 		
 		expectedMassOnScale = expectedMassOnScale.add(expectedMass); //Update the expected weight that should be on the scale
@@ -156,23 +168,32 @@ BarcodeScannerListener {
 		
 	}
 	
-	//method to pay with coin
+	/**
+	 * Sets session to payment state, disabling addition of further items and enabling coinslot
+	 * Prints
+	 * 
+	 * Would be initiated by a customer selecting "Pay with Coin" on GUI, represented by method call here
+	 */
 	public void payWithCoin() {
 		
 		scanner.disable();
 		coinslot.enable();
 		payingForOrder = true;
 		
-		System.out.println("Total: $" + orderTotal);
+		System.out.println("Total: $" + orderTotal.toString());
 		System.out.print("Insert coins: ");
 	}
 	
-	
+	/**
+	 * Updates amount paid, prints balance if one remains, and ends session if payment is sufficient
+	 * 
+	 * @param currentPayment A confirmed amount of money which has been paid towards the customer's balance
+	 */
 	public void processPayment(BigDecimal currentPayment) {
 		
 		amountPaid = amountPaid.add(currentPayment);
 		
-		if (orderTotal.compareTo(amountPaid) >= 0) {
+		if (amountPaid.compareTo(orderTotal) >= 0) {
 			
 			coinslot.disable();
 			System.out.println("Payment completed, ending session");
@@ -182,9 +203,19 @@ BarcodeScannerListener {
 			
 		}
 		
+		else {
+			System.out.println("Amount received: $" + currentPayment.toString());
+			System.out.println("Remaining balance: $" + orderTotal.subtract(amountPaid));
+		}
+		
 	}
 	
-	//method for when weight discrepancy is detected
+	/**
+	 * Blocks an open session by disabling scanner and alerts customer/attendant of weight discrepancy
+	 * 
+	 * If at payment stage, disables coinslot so that payment cannot be completed without correction of
+	 * 		bagging area contents
+	 */
 	public void weightDiscrepancyDetected() {
 		
 		if (payingForOrder) {coinslot.disable();}
@@ -196,6 +227,11 @@ BarcodeScannerListener {
 		System.out.println("Attendant screen: Weight discrepancy detected.");
 	}
 	
+	/**
+	 * Unblocks a blocked session by reenabling scanner, and notes that the issue is resolved
+	 * 
+	 * If at payment stage, enables coinslot so that payment can resume
+	 */
 	public void weightDiscrepancyEnded() {
 		
 		if (payingForOrder) {
@@ -211,11 +247,21 @@ BarcodeScannerListener {
 		
 	}
 	
+	/**
+	 * Checks if discrepancy has appeared or has been resolved between expected and actual mass on the scale
+	 * 
+	 * Allows for a margin up to the scale's sensitivity limit
+	 * 
+	 * If a weight discrepancy is ongoing, checks if it has been resolved and calls weightDiscrepancyEnded() if so
+	 * If in an open session, checks for a weight discrepancy and calls weightDiscrepancyDetected() if necessary
+	 * 
+	 */
 	public void discrepancyCheck() {
 		
 		try {
 			actualMassOnScale = scale.getCurrentMassOnTheScale().inGrams();
 		} catch (OverloadedDevice sadScale) {
+			
 			weightDiscrepancyDetected();
 			System.out.println("SCALE OVERLOADED. PLEASE REMOVE WEIGHT AND ALERT STAFF");
 			return;
@@ -229,11 +275,11 @@ BarcodeScannerListener {
 				
 			if (difference.compareTo(sensitivity) > 0) {
 					weightDiscrepancyDetected();
-					return;
+					return; //so that else block is not required further down
 			}
 		}
 		
-		if (difference.compareTo(sensitivity) < 0) {
+		if (difference.compareTo(sensitivity) <= 0) {
 					weightDiscrepancyEnded();
 			}
 		
@@ -251,9 +297,16 @@ BarcodeScannerListener {
 	@Override
 	public void turnedOff(IComponent<? extends IComponentObserver> component) {}
 
+	/**
+	 * Calls processPayment with the value of the coin
+	 * 
+	 * This assumes that once a coin is validated, the system will have a place for it in the coin storage unit and place it there
+	 */
 	@Override
 	public void validCoinDetected(CoinValidator validator, BigDecimal value) {
-		processPayment(value);
+		if (value != null) {
+			processPayment(value);
+		}
 	}
 
 	@Override
@@ -271,11 +324,20 @@ BarcodeScannerListener {
 	@Override
 	public void aDeviceHasBeenTurnedOff(IDevice<? extends IDeviceListener> device) {}
 
+	/**
+	 * If a barcode is received from the scanner, passes it to addItem method
+	 */
 	@Override
 	public void aBarcodeHasBeenScanned(IBarcodeScanner barcodeScanner, Barcode barcode) {
-		addItem(barcode);
+		if (barcode != null) {
+			addItem(barcode);
+			
+		}		
 	}
 
+	/**
+	 * Runs discrepancyCheck() any time the mass on the scale changes
+	 */
 	@Override
 	public void theMassOnTheScaleHasChanged(IElectronicScale scale, Mass mass) {
 		discrepancyCheck();
