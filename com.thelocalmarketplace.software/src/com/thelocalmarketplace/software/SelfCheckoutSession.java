@@ -19,6 +19,8 @@ public class SelfCheckoutSession {
 	private Map<Barcode, BarcodedProduct> barcodeMap;
 	private Bigdecimal actualWeightOfCart;
 	private BigDecimal expectedWeightOfCart;
+	private BigDecimal actualMass;
+	private BigDecimal expectedMass;
 	
 	
 	private boolean isBlocked = false;
@@ -35,7 +37,7 @@ public class SelfCheckoutSession {
 		catch {exception e}
 		throw new NullPointerExcption();
 		
-		actualWeightOfCart = item.getMass().inGrams();
+		actualMass = item.getMass().inGrams();
 		Barcode itemBarcode = item.getBarcode();
 		
 		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(itemBarcode);
