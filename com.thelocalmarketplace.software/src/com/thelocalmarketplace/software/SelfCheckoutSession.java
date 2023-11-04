@@ -42,7 +42,13 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	double total = 0;
 	BigDecimal coinEntered = BigDecimal.ZERO;
 	
-	private boolean isBlocked = false;
+	/**
+	 * making isBlocked an integer so that it can have three states
+	 * 0 = Open
+	 * 1 = Weight discrepancy
+	 * 2 = Pay with Coin
+	 */
+	private int isBlocked = 0;
 
 	// Kelvin's Added variables
 	private double expectedWeightOfCart = 0;
@@ -94,8 +100,11 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 		return;
 	}
 	
-	//method to pay with coin
+	/***
+	 * Processes a coin being used to pay
+	 */
 	public void PayWithCoin(){
+		isBlocked = 2; 
 		coinslot.activate();
 		double coinValue = 0;
 		
@@ -110,6 +119,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 		if(total <= 0) {
 			coinslot.disactivate();
 			System.out.println("Payment completed");
+			sessionEnded();
 		}
 	}
 	
@@ -146,7 +156,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 
 	@Override
 	public void validCoinDetected(CoinValidator validator, BigDecimal value) {
-		coinEntered = coinEntered.add(value);
+		coinEntered = value;
 	}
 
 	@Override
