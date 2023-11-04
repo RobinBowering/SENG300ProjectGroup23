@@ -31,14 +31,14 @@ import com.tdc.coin.*;
 import com.tdc.*;
 public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObserver, CoinStorageUnitObserver, ElectronicScaleListener, BarcodeScannerListener {
 	
-	SelfCheckoutController controlller;
-	
 	
 	BarcodeScanner scanner;
 	CoinStorageUnit coinStorage;
 	CoinValidator validator;
 	CoinSlot coinslot;
 	ElectronicScale scale;
+	
+	SelfCheckoutController controller;
 	
 	ArrayList<Item> order = new ArrayList<Item>();
 	BigDecimal orderTotal = BigDecimal.ZERO;
@@ -62,7 +62,8 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	 */
 	public SelfCheckoutSession(SelfCheckoutStation station, SelfCheckoutController instantiator) {
 		
-		scale = station.baggingArea;
+		controller = instantiator;
+		
 		scale.enable();
 		
 		scanner = station.scanner;
@@ -89,6 +90,8 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	//method to add item to cart
 	public void addItem(Barcode barcode) {
 		
+		if (payingForOrder) {return;}
+		
 		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(barcode); // Gets the database of the barcode
 		expectedMass = BigDecimal.valueOf(product.getExpectedWeight()); // Gets expected weight of item
 		BigDecimal price = BigDecimal.valueOf(product.getPrice()); // get the price from the database
@@ -111,14 +114,8 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 		coinslot.enable();
 		payingForOrder = true;
 		
-		System.out.println("Total: " + orderTotal);
+		System.out.println("Total: $" + orderTotal);
 		System.out.print("Insert coins: ");
-
-		
-		if(orderTotal.compareTo(BigDecimal.ZERO) >= 0) {
-			coinslot.disactivate();
-			System.out.println("Payment completed");
-		}
 	}
 	
 	
@@ -127,6 +124,12 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 		amountPaid = amountPaid.add(currentPayment);
 		
 		if (orderTotal.compareTo(amountPaid) >= 0) {
+			
+			coinslot.disable();
+			System.out.println("Payment completed, ending session");
+			controller.sessionEnded();
+			
+			//GUI scene would reset here
 			
 		}
 		
