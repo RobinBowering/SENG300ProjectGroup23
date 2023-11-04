@@ -17,6 +17,7 @@ import com.jjjwelectronics.IDevice;
 import com.jjjwelectronics.IDeviceListener;
 import com.jjjwelectronics.Item;
 import com.jjjwelectronics.Mass;
+import com.jjjwelectronics.OverloadedDevice;
 import com.jjjwelectronics.scale.ElectronicScale;
 import com.jjjwelectronics.scale.ElectronicScaleListener;
 import com.jjjwelectronics.scale.IElectronicScale;
@@ -45,10 +46,8 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	private boolean isBlocked = false;
 
 	// Kelvin's Added variables
-	private double expectedWeightOfCart = 0;
-	private double actualWeightOfCart = 0;
 	private ProductDatabases barcodeMap;
-	private Bigdecimal actualWeightOfCart;
+	private BigDecimal actualWeightOfCart;
 	private BigDecimal expectedWeightOfCart;
 	private BigDecimal actualMass;
 	private BigDecimal expectedMass;
@@ -118,6 +117,12 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 		isBlocked = true;
 		System.out.println("Customer screen: Weight discrepancy detected.");
 		System.out.println("Attendant screen: Weight discrepancy detected.");
+	}
+	
+	public void discrepancyCheck() throws OverloadedDevice {
+		actualWeightOfCart = scale.getCurrentMassOnTheScale().inGrams();
+		
+		
 	}
 
 	@Override
