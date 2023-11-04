@@ -3,11 +3,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.jjjwelectronics.Item;
+import com.tdc.coin.CoinSlot;
 
 public class SelfCheckoutSession {
 	ArrayList<Item> order = new ArrayList<Item>();
 	Scanner userInput = new Scanner(System.in);
 	
+	CoinSlot coinslot = new CoinSlot();
 	
 	private boolean isBlocked = false;
 	
@@ -26,85 +28,21 @@ public class SelfCheckoutSession {
 		return;
 	}
 	
-	//simple WeightDiscrepancyDetected to change isBlocked
+	//simple WeightDiscrepancyDetected to change isBlocked, possibly to make it false when WeightDiscrepancyDetected is no longer true
 	public void WeightDiscrepancyDetected(boolean value) {
 		isBlocked = value;
 	}
 	
-	/**Precondition: StartSession() has already been called**/
-	//method for when weight discrepancy is detected
+	//just called when WeightDiscrepancyDetected
 	public void WeightDiscrepancyDetected() {
-		//block everything
 		isBlocked = true;
-		
-		//notify customer and attendant screen of weight discrepancy
-		System.out.println("Customer screen: Weight discrepancy has been detected.");
-		System.out.println("Attendant screen: Weight discrepancy detected.");
-		
-		//let customer choose the options
-		System.out.println("Customer screen: Please do one of the following:");
-		System.out.println("1. Add or remove the item you just changed.");
-		System.out.println("2. Select the do-not-bag request.");
-		System.out.println("3. Ask attendant to override weight discrepancy.");
-		System.out.println("Please enter a single number as your choice: ");
-		
-		while(true) {
-			
-			String response = userInput.next();
-		
-			if (response.equals("1")) {
-				//has to check if weight discrepancy is gone
-				//need listeners
-				System.out.println("Checking...");
-				return;
-			}
-			
-			else if(response.equals("2")) {
-				//select the do-not-bag-request
-				System.out.println("Do-not-bag request selected...");
-				isBlocked = false;
-				return;
-			}
-			
-			else if(response.equals("3")) {
-				System.out.println("Attendant screen: Approve overide of weight discrepancy? (yes/no)");
-				String attendantResponse = userInput.next();
-				
-				if(attendantResponse.equals("no")) {
-					System.out.println("Override request has been denied.");
-					return;
-				}
-			    else if (attendantResponse.equals("yes")) {
-	                System.out.println("Override request has been approved.");
-	                isBlocked = false;
-	                return;
-	            } 
-			    
-			    else {
-	                System.out.println("Invalid response. Please enter 'yes' or 'no'.");
-	                System.out.println("Returning to main menu...");
-	                
-	                System.out.println("Customer screen: Please do one of the following:");
-					System.out.println("1. Add or remove the item you just changed.");
-					System.out.println("2. Select the do-not-bag request.");
-					System.out.println("3. Ask attendant to override weight discrepancy.");
-					System.out.println("Please enter a single number as your choice: ");
-	            }
-				
-				
-			}
-			
-			else {
-				System.out.println("Please enter a valid number.\n");
-				
-				System.out.println("Customer screen: Please do one of the following:");
-				System.out.println("1. Add or remove the item you just changed.");
-				System.out.println("2. Select the do-not-bag request.");
-				System.out.println("3. Ask attendant to override weight discrepancy.");
-				System.out.println("Please enter a single number as your choice: ");
-			}
-		
-		}
-		}
+		coinslot.disable();
+	}
+	
+	//another method to actually remove weight discrepancy, instead of using the first one
+	public void WeightDiscrepancyRemoved() {
+		isBlocked = false;
+		coinslot.enable();
+	}
 		
 }
