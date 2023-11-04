@@ -70,12 +70,12 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	}
 	
 	//method to start the session
-	public void StartSession() {
+	public void startSession() {
 		return;
 	}
 	
 	//method to add item to cart
-	public void AddItem(Barcode barcode) {
+	public void addItem(Barcode barcode) {
 		
 		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(barcode); // Gets the database of the barcode
 		expectedMass = BigDecimal.valueOf(product.getExpectedWeight()); // Gets expected weight of item
@@ -86,14 +86,14 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 		total = total.add(price); // Add product price to the total price of customer cart
 		
 		if (expectedMassOnScale != actualMassOnScale) { // If there is a difference between expected and actual weight that should 
-			WeightDiscrepancyDetected(); // be on the scale then call WeightDiscrepancyDetected
+			weightDiscrepancyDetected(); // be on the scale then call WeightDiscrepancyDetected
 		}
 		
 		return;
 	}
 	
 	//method to pay with coin
-	public void PayWithCoin(){
+	public void payWithCoin(){
 		coinslot.activate();
 		BigDecimal coinValue = BigDecimal.ZERO;
 		
@@ -112,7 +112,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	}
 	
 	//method for when weight discrepancy is detected
-	public void WeightDiscrepancyDetected() {
+	public void weightDiscrepancyDetected() {
 		blockedState = 0;
 		System.out.println("Customer screen: Weight discrepancy detected.");
 		System.out.println("Attendant screen: Weight discrepancy detected.");
@@ -187,7 +187,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 
 	@Override
 	public void aBarcodeHasBeenScanned(IBarcodeScanner barcodeScanner, Barcode barcode) {
-		AddItem(barcode);
+		addItem(barcode);
 		
 	}
 
