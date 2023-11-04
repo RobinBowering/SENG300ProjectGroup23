@@ -41,8 +41,8 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	ElectronicScale scale;
 	
 	ArrayList<Item> order = new ArrayList<Item>();
-	BigDecimal total = BigDecimal.ZERO;
-	BigDecimal coinEntered = BigDecimal.ZERO;
+	BigDecimal orderTotal = BigDecimal.ZERO;
+	BigDecimal amountPaid = BigDecimal.ZERO;
 	
 	private boolean weightDiscrepancy = false;
 	private boolean payingForOrder = false;
@@ -86,7 +86,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 		
 		expectedMassOnScale = expectedMassOnScale.add(expectedMass); //Update the expected weight that should be on the scale
 
-		total = total.add(price); // Add product price to the total price of customer cart
+		orderTotal = orderTotal.add(price); // Add product price to the total price of customer cart
 		
 		if (expectedMassOnScale != actualMassOnScale) { // If there is a difference between expected and actual weight that should 
 			weightDiscrepancyDetected(); // be on the scale then call WeightDiscrepancyDetected
@@ -96,30 +96,39 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	}
 	
 	//method to pay with coin
-	public void payWithCoin(){
-		coinslot.activate();
-		BigDecimal coinValue = BigDecimal.ZERO;
+	public void payWithCoin() {
 		
-		while(total.doubleValue() > 0) {
-			System.out.println("Total: " + total);
-			System.out.print("Insert cash: ");
-			coinValue = BigDecimal.valueOf(coinEntered.doubleValue());
-		}
+		scanner.disable();
+		coinslot.enable();
+		payingForOrder = true;
 		
-		total = total.subtract(coinValue);
+		System.out.println("Total: " + orderTotal);
+		System.out.print("Insert coins: ");
+
 		
-		if(total.compareTo((BigDecimal.ZERO)) >= 0) {
+		if(orderTotal.compareTo(BigDecimal.ZERO) >= 0) {
 			coinslot.disactivate();
 			System.out.println("Payment completed");
 		}
 	}
 	
+	
+	public void processPayment(BigDecimal currentPayment) {
+		
+		amountPaid = amountPaid.add(currentPayment);
+		
+		if (orderTotal.compareTo(amountPaid) >= 0) {
+			
+		}
+		
+	}
+	
 	//method for when weight discrepancy is detected
 	public void weightDiscrepancyDetected() {
-		scanner.disable();
-		if (payingForOrder) {
-			coinslot.disable();
-		}
+		
+		if (payingForOrder) {coinslot.disable();}
+		
+		else {scanner.disable();}
 		
 		weightDiscrepancy = true;
 		System.out.println("Customer screen: Weight discrepancy detected.");
@@ -127,9 +136,12 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	}
 	
 	public void weightDiscrepancyEnded() {
-		scanner.enable();
+		
 		if (payingForOrder) {
 			coinslot.enable();
+		}
+		else {
+			
 		}
 		
 		weightDiscrepancy = false;
@@ -148,7 +160,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 			return;
 		}
 		
-		BigDecimal difference = actualMassOnScale.subtract(expectedMassOnScale);
+		BigDecimal difference = actualMassOnScale.subtract(expectedMassOnScale).abs();
 		BigDecimal sensitivity = scale.getSensitivityLimit().inGrams();
 		
 		
@@ -192,7 +204,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 
 	@Override
 	public void validCoinDetected(CoinValidator validator, BigDecimal value) {
-		coinEntered = coinEntered.add(value);
+		processPayment(value);
 	}
 
 	@Override
