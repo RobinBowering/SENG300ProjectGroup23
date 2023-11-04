@@ -1,10 +1,6 @@
 package com.thelocalmarketplace.software;
 
-import java.math.BigDecimal;
-
-
 import com.thelocalmarketplace.hardware.SelfCheckoutStation;
-
 
 public class SelfCheckoutController {
 	
@@ -24,7 +20,7 @@ public class SelfCheckoutController {
 
 	
 	/**
-	 * Confirms that all needed hardware is enabled, and instantiates a SelfCheckoutSession if so
+	 * Instantiates a SelfCheckoutSession and registers it as a listener for appropriate hardware
 	 */
 	public void startSession() {
 		
@@ -43,6 +39,9 @@ public class SelfCheckoutController {
 		}		
 	}
 	
+	/**
+	 * Changes controller and accessible hardware to non-active-session state
+	 */
 	public void sessionEnded() {
 		activeSession = false;
 		disableAll();
@@ -56,7 +55,7 @@ public class SelfCheckoutController {
 		hardware.scanner.disable();
 		hardware.coinSlot.disable();
 		hardware.coinValidator.disable();
-		hardware.coinValidator.disable();
+		hardware.coinStorage.disable();
 	}
 	
 }
