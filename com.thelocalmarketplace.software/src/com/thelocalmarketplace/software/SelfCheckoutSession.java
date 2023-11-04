@@ -41,7 +41,7 @@ import com.tdc.*;
  * Monolithic class representing and supporting a single session with the Self-Checkout System
  * 
  * Supports:
- *  -startup
+ *  -session startup
  *  -automatic item addition to order upon barcode scan
  *  -automatic weight management, checked
  *  
