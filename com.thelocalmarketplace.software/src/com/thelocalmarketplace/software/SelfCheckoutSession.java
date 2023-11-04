@@ -40,6 +40,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	
 	ArrayList<Item> order = new ArrayList<Item>();
 	double total = 0;
+	BigDecimal coinEntered = BigDecimal.ZERO;
 	
 	private boolean isBlocked = false;
 
@@ -145,8 +146,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 
 	@Override
 	public void validCoinDetected(CoinValidator validator, BigDecimal value) {
-		// TODO Auto-generated method stub
-		
+		coinEntered = coinEntered.add(value);
 	}
 
 	@Override
