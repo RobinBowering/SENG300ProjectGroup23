@@ -1,5 +1,6 @@
 package com.thelocalmarketplace.software;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import com.thelocalmarketplace.*;
 import com.thelocalmarketplace.hardware.SelfCheckoutStation;
@@ -18,6 +19,18 @@ import com.tdc.IComponentObserver;
 import com.tdc.coin.*;
 import com.tdc.*;
 public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObserver, CoinStorageUnitObserver, ElectronicScaleListener, BarcodeScannerListener {
+	
+	SelfCheckoutController controlller;
+	
+	BarcodeScanner scanner;
+	CoinStorageUnit coinStorage;
+	CoinValidator validator;
+	CoinSlot coinslot;
+	ElectronicScale scale;
+	
+	BigInteger expectedMass;
+	BigInteger actualMass;
+	
 	ArrayList<Item> order = new ArrayList<Item>();
 	
 	
@@ -28,8 +41,12 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	 * @param a Self Checkout Station with all hardware enabled
 	 * @param The self checkout controller which called the constructor
 	 */
-	public SelfCheckoutSession(SelfCheckoutStation station, SelfCheckoutController controller) {
-		
+	public SelfCheckoutSession(SelfCheckoutStation station, SelfCheckoutController instantiator) {
+		scale = station.baggingArea;
+		scanner = station.scanner;
+		validator = station.coinValidator;
+		coinslot = station.coinSlot;
+		coinStorage = station.coinStorage;
 		
 	}
 	
