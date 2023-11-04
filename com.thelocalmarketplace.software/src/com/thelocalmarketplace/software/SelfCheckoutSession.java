@@ -71,17 +71,15 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	}
 	
 	//method to add item to cart
-	public void AddItem(BarcodedItem item) {
+	public void AddItem(Barcode barcode) {
 		
-		Barcode itemBarcode = item.getBarcode(); //Gets the barcode of the scanned item
-		
-		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(itemBarcode); // Gets the database of the barcode
+		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(barcode); // Gets the database of the barcode
 		expectedMass = BigDecimal.valueOf(product.getExpectedWeight()); // Gets expected weight of item
 		BigDecimal price = BigDecimal.valueOf(product.getPrice()); // get the price from the database
 		
 		expectedMassOnScale = expectedMassOnScale.add(expectedMass); //Update the expected weight that should be on the scale
 
-		total = total.add(price); // Add item to the total price of customer cart
+		total = total.add(price); // Add product price to the total price of customer cart
 		
 		if (expectedMassOnScale != actualMassOnScale) { // If there is a difference between expected and actual weight that should 
 			WeightDiscrepancyDetected(); // be on the scale then call WeightDiscrepancyDetected
@@ -95,7 +93,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 		coinslot.activate();
 		double coinValue = 0;
 		
-		while(total > 0) {
+		while(total.doubleValue() > 0) {
 			System.out.println("Total: " + total);
 			System.out.print("Insert cash: ");
 			coinValue = coinEntered.doubleValue();
@@ -185,7 +183,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 
 	@Override
 	public void aBarcodeHasBeenScanned(IBarcodeScanner barcodeScanner, Barcode barcode) {
-		// TODO Auto-generated method stub
+		AddItem(barcode);
 		
 	}
 
