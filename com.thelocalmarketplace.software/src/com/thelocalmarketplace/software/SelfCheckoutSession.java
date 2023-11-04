@@ -1,21 +1,12 @@
 package com.thelocalmarketplace.software;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Scanner;
 
-import com.jjjwelectronics.scanner.*;
+
+import java.math.BigDecimal;
 import com.thelocalmarketplace.hardware.BarcodedProduct;
 import com.thelocalmarketplace.hardware.external.ProductDatabases;
-import ca.ucalgary.seng300.simulation.*;
-import java.math.BigDecimal;
-
-import com.thelocalmarketplace.hardware.external.*;
-import com.thelocalmarketplace.*;
 import com.thelocalmarketplace.hardware.SelfCheckoutStation;
 import com.jjjwelectronics.IDevice;
 import com.jjjwelectronics.IDeviceListener;
-import com.jjjwelectronics.Item;
 import com.jjjwelectronics.Mass;
 import com.jjjwelectronics.OverloadedDevice;
 import com.jjjwelectronics.scale.ElectronicScale;
@@ -28,7 +19,6 @@ import com.jjjwelectronics.scanner.IBarcodeScanner;
 import com.tdc.IComponent;
 import com.tdc.IComponentObserver;
 import com.tdc.coin.*;
-import com.tdc.*;
 
 /**
  * 
