@@ -43,7 +43,7 @@ public class SelfCheckoutSession {
 		double price = barcodeMap.get(product);
 		totalCartPrice += price;
 		
-		WeightDiscrepancyDetected()	
+		WeightDiscrepancyDetected();	
 		
 		return;
 	}
