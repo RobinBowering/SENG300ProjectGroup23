@@ -61,8 +61,21 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	}
 	
 	//method to pay with coin
-	public void PayWithCoin(int amount) {
-		return;
+	public void PayWithCoin(){
+		Scanner scanner = new Scanner(System.in);
+		double coinEntered = 0;
+		
+		while(total > 0) {
+			System.out.println("Total: " + total);
+			System.out.print("Insert cash: ");
+			coinEntered = scanner.nextDouble();
+		}
+		
+		total -= coinEntered;
+		
+		if(total <= 0) {
+			System.out.println("Payment completed");
+		}
 	}
 	
 	//method for when weight discrepancy is detected
