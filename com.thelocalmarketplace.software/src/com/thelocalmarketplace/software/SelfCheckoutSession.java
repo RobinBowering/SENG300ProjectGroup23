@@ -36,6 +36,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	
 	ArrayList<Item> order = new ArrayList<Item>();
 	double total = 0;
+	BigDecimal coinEntered = BigDecimal.ZERO;
 	
 	private boolean isBlocked = false;
 	
@@ -65,18 +66,19 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	
 	//method to pay with coin
 	public void PayWithCoin(){
-		Scanner scanner = new Scanner(System.in);
-		double coinEntered = 0;
+		coinslot.activate();
+		double coinValue = 0;
 		
 		while(total > 0) {
 			System.out.println("Total: " + total);
 			System.out.print("Insert cash: ");
-			coinEntered = scanner.nextDouble();
+			coinValue = coinEntered.doubleValue();
 		}
 		
-		total -= coinEntered;
+		total -= coinValue;
 		
 		if(total <= 0) {
+			coinslot.disactivate();
 			System.out.println("Payment completed");
 		}
 	}
@@ -114,8 +116,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 
 	@Override
 	public void validCoinDetected(CoinValidator validator, BigDecimal value) {
-		// TODO Auto-generated method stub
-		
+		coinEntered = coinEntered.add(value);
 	}
 
 	@Override
