@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 import com.thelocalmarketplace.hardware.SelfCheckoutStation;
 
+
 public class SelfCheckoutController {
 	
 	SelfCheckoutStation hardware;
@@ -16,6 +17,7 @@ public class SelfCheckoutController {
 	 */
 	public SelfCheckoutController(SelfCheckoutStation station) {
 		hardware = station;
+		
 		disableAll();
 	}
 	
