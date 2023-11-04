@@ -228,9 +228,7 @@ BarcodeScannerListener {
 		if (payingForOrder) {
 			coinslot.enable();
 		}
-		else {
-			
-		}
+		else {scanner.enable();}
 		
 		weightDiscrepancy = false;
 		System.out.println("Customer screen: Weight discrepancy resolved.");
