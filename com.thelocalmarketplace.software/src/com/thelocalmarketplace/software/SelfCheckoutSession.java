@@ -32,22 +32,22 @@ public class SelfCheckoutSession {
 	
 	//method to add item to cart
 	public void AddItem(BarcodedItem item) throws exception {
-		new BarcodeScanner scanner;
-		try {scanner.scan(item);}
-		catch {exception e}
-		throw new NullPointerExcption();
+		new BarcodeScanner scanner; // Delete this when you added to main, I used it so I could call
+		try {scanner.scan(item);} // Try and scan an item
+		catch {exception e} // Catches an exception
+		throw new NullPointerExcption(); // Throws a null pointer exception from simulation package
 		
-		actualMass = item.getMass().inGrams();
-		Barcode itemBarcode = item.getBarcode();
+		actualMass = item.getMass().inGrams(); //Actual mass of the item scanned in 
+		Barcode itemBarcode = item.getBarcode(); //Gets the barcode of the scanned item
 		
-		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(itemBarcode);
-		expectedMass = product.getExpectedWeight();
-		expectedWeightOfCart += expectedMass;
-		double price = barcodeMap.get(product);
-		totalCartPrice += price;
+		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(itemBarcode); // Gets the database of the barcode
+		expectedMass = product.getExpectedWeight(); // Gets expected weight of item
+		expectedWeightOfCart += expectedMass; //Update the expected weight that should be on the scale
+		double price = barcodeMap.get(product); // get the price from the database
+		totalCartPrice += price; // Add item to the total price of customer cart
 		
-		if (expectedWeightOfCart != actualWeightOfCart) {
-			WeightDiscrepancyDetected();
+		if (expectedWeightOfCart != actualWeightOfCart) { // If there is a difference between expected and actual weight that should 
+			WeightDiscrepancyDetected(); // be on the scale then call WeightDiscrepancyDetected
 		}
 		
 		return;
