@@ -29,25 +29,74 @@ import com.tdc.IComponent;
 import com.tdc.IComponentObserver;
 import com.tdc.coin.*;
 import com.tdc.*;
-public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObserver, CoinStorageUnitObserver, ElectronicScaleListener, BarcodeScannerListener {
+
+/**
+ * 
+ * @author Robin Bowering UCID 30123373
+ * @author Matt Gibson UCID 30117091
+ * @author Kelvin Jamila UCID 30117164
+ * @author Nikki Kim UCID 30189188
+ * @author Hillary Nguyen UCID 30161137
+ * 
+ * Monolithic class representing and supporting a single session with the Self-Checkout System
+ * 
+ * Supports:
+ *  -startup
+ *  -automatic item addition to order upon barcode scan
+ *  -automatic weight management, checked
+ *  
+ */
+public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObserver, CoinStorageUnitObserver, ElectronicScaleListener,
+BarcodeScannerListener {
 	
-	
+	/**
+	 * Barcode Scanner of self checkout machine, representative of hardware
+	 * component
+	 */
 	BarcodeScanner scanner;
+	/**
+	 * Coin Storage Unit of self checkout machine, representative of 
+	 * hardware component
+	 */
 	CoinStorageUnit coinStorage;
 	CoinValidator validator;
 	CoinSlot coinslot;
 	ElectronicScale scale;
 	
+	/**
+	 * The controller which set up the current session
+	 */
 	SelfCheckoutController controller;
 	
+	/**
+	 * The total cost of all items in order
+	 */
 	BigDecimal orderTotal = BigDecimal.ZERO;
+	
+	/**
+	 * The amount which has been received against the customer's balance through processPayment()
+	 */
 	BigDecimal amountPaid = BigDecimal.ZERO;
 	
+	/**
+	 * State variable, signaling if the session has an ongoing weight discrepancy
+	 */
 	private boolean weightDiscrepancy = false;
+	
+	/**
+	 * State variable, signaling if the customer has entered the payment phase (and can no longer add items)
+	 */
 	private boolean payingForOrder = false;
 
 	// Kelvin's Added variables
+	/**
+	 * Mass as reported by the scale through listener method
+	 */
 	private BigDecimal actualMassOnScale;
+	
+	/**
+	 * Expected mass based on sum of all items in order's mass
+	 */
 	private BigDecimal expectedMassOnScale;
 	private BigDecimal expectedMass;
 	
@@ -85,7 +134,11 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 		return;
 	}
 	
-	//method to add item to cart
+	/**
+	 * Looks up product associated with barcode passed to it and adds it to order
+	 * Triggers discrepancyCheck() after updating expected weight
+	 * @param barcode
+	 */
 	public void addItem(Barcode barcode) {
 		
 		if (payingForOrder) {return;}
@@ -98,11 +151,9 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 
 		orderTotal = orderTotal.add(price); // Add product price to the total price of customer cart
 		
-		if (expectedMassOnScale != actualMassOnScale) { // If there is a difference between expected and actual weight that should 
-			weightDiscrepancyDetected(); // be on the scale then call WeightDiscrepancyDetected
-		}
+		discrepancyCheck();
 		
-		return;
+		
 	}
 	
 	//method to pay with coin
