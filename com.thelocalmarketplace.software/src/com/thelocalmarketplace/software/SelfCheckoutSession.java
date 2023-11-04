@@ -41,7 +41,7 @@ public class SelfCheckoutSession {
 		
 		//notify customer and attendant screen of weight discrepancy
 		System.out.println("Customer screen: Weight discrepancy has been detected.");
-		System.out.println("Attendant screen: Weight discrepancy detected.");
+		System.out.println("Attendant screen: Weight discrepancy has been detected.");
 		
 		//let customer choose the options
 		System.out.println("Customer screen: Please do one of the following:");
@@ -84,7 +84,7 @@ public class SelfCheckoutSession {
 			    
 			    else {
 	                System.out.println("Invalid response. Please enter 'yes' or 'no'.");
-	                System.out.println("Returning to main menu...");
+	                System.out.println("Returning to main menu...\n");
 	                
 	                System.out.println("Customer screen: Please do one of the following:");
 					System.out.println("1. Add or remove the item you just changed.");
@@ -92,8 +92,6 @@ public class SelfCheckoutSession {
 					System.out.println("3. Ask attendant to override weight discrepancy.");
 					System.out.println("Please enter a single number as your choice: ");
 	            }
-				
-				
 			}
 			
 			else {
