@@ -17,7 +17,8 @@ public class SelfCheckoutSession {
 	private double expectedWeightOfCart = 0;
 	private double actualWeightOfCart = 0;
 	private Map<Barcode, BarcodedProduct> barcodeMap;
-	private Bigdecimal value;
+	private Bigdecimal actualWeightOfCart;
+	private BigDecimal expectedWeightOfCart;
 	
 	
 	private boolean isBlocked = false;
@@ -34,16 +35,18 @@ public class SelfCheckoutSession {
 		catch {exception e}
 		throw new NullPointerExcption();
 		
-		value = item.getMass().inGrams();
+		actualWeightOfCart = item.getMass().inGrams();
 		Barcode itemBarcode = item.getBarcode();
 		
 		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(itemBarcode);
-		double expectedMass = product.getExpectedWeight();
+		expectedMass = product.getExpectedWeight();
 		expectedWeightOfCart += itemActualMass;
 		double price = barcodeMap.get(product);
 		totalCartPrice += price;
 		
-		WeightDiscrepancyDetected();	
+		if (expectedWeightOfCart != actualWeightOfCart) {
+			WeightDiscrepancyDetected();
+		}
 		
 		return;
 	}
