@@ -34,6 +34,7 @@ import com.tdc.coin.*;
  *  -session startup
  *  -automatic item addition to order upon barcode scan
  *  -automatic weight management, checked
+ *  -finishing session by paying off full balance via coin(s)
  *  
  */
 public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObserver, CoinStorageUnitObserver, ElectronicScaleListener,
@@ -171,7 +172,7 @@ BarcodeScannerListener {
 		payingForOrder = true;
 		
 		System.out.println("Total: $" + orderTotal.toString());
-		System.out.print("Insert coins: ");
+		System.out.print("Insert coin(s): ");
 	}
 	
 	/**
