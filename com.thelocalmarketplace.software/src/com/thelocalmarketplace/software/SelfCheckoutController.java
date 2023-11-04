@@ -24,7 +24,7 @@ public class SelfCheckoutController {
 	boolean activeSession = false;
 	
 	/**
-	 * Takes a SelfCheckoutMachine that is plugged in and turned on
+	 * Takes a SelfCheckoutMachine that is plugged in and turned on and associates it with a field in new controller
 	 */
 	public SelfCheckoutController(SelfCheckoutStation station) {
 		hardware = station;
