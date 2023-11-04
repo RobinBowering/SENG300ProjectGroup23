@@ -49,7 +49,6 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	private ProductDatabases barcodeMap;
 	private BigDecimal actualWeightOfCart;
 	private BigDecimal expectedWeightOfCart;
-	private BigDecimal actualMass;
 	private BigDecimal expectedMass;
 	
 	/**
@@ -74,7 +73,6 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	//method to add item to cart
 	public void AddItem(BarcodedItem item) {
 		
-		actualMass = item.getMass().inGrams(); //Actual mass of the item scanned in 
 		Barcode itemBarcode = item.getBarcode(); //Gets the barcode of the scanned item
 		
 		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(itemBarcode); // Gets the database of the barcode
