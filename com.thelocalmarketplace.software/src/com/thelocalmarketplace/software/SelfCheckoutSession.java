@@ -1,13 +1,37 @@
 package com.thelocalmarketplace.software;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-
-import com.jjjwelectronics.Item;
-
-public class SelfCheckoutSession {
+import com.thelocalmarketplace.*;
+import com.thelocalmarketplace.hardware.SelfCheckoutStation;
+import com.jjjwelectronics.IDevice;
+import com.jjjwelectronics.IDeviceListener;
+import com.jjjwelectronics.Mass;
+import com.jjjwelectronics.scale.ElectronicScale;
+import com.jjjwelectronics.scale.ElectronicScaleListener;
+import com.jjjwelectronics.scale.IElectronicScale;
+import com.jjjwelectronics.scanner.Barcode;
+import com.jjjwelectronics.scanner.BarcodeScanner;
+import com.jjjwelectronics.scanner.BarcodeScannerListener;
+import com.jjjwelectronics.scanner.IBarcodeScanner;
+import com.tdc.IComponent;
+import com.tdc.IComponentObserver;
+import com.tdc.coin.*;
+import com.tdc.*;
+public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObserver, CoinStorageUnitObserver, ElectronicScaleListener, BarcodeScannerListener {
 	ArrayList<Item> order = new ArrayList<Item>();
 	
 	
 	private boolean isBlocked = false;
+	
+	/**
+	 * Instantiates a Self Checkout Session
+	 * @param a Self Checkout Station with all hardware enabled
+	 * @param The self checkout controller which called the constructor
+	 */
+	public SelfCheckoutSession(SelfCheckoutStation station, SelfCheckoutController controller) {
+		
+		
+	}
 	
 	//method to start the session
 	public void StartSession() {
@@ -29,6 +53,120 @@ public class SelfCheckoutSession {
 		isBlocked = true;
 		System.out.println("Customer screen: Weight discrepancy detected.");
 		System.out.println("Attendant screen: Weight discrepancy detected.");
+	}
+
+	@Override
+	public void enabled(IComponent<? extends IComponentObserver> component) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void disabled(IComponent<? extends IComponentObserver> component) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void turnedOn(IComponent<? extends IComponentObserver> component) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void turnedOff(IComponent<? extends IComponentObserver> component) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void validCoinDetected(CoinValidator validator, BigDecimal value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void invalidCoinDetected(CoinValidator validator) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void aDeviceHasBeenEnabled(IDevice<? extends IDeviceListener> device) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void aDeviceHasBeenDisabled(IDevice<? extends IDeviceListener> device) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void aDeviceHasBeenTurnedOn(IDevice<? extends IDeviceListener> device) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void aDeviceHasBeenTurnedOff(IDevice<? extends IDeviceListener> device) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void aBarcodeHasBeenScanned(IBarcodeScanner barcodeScanner, Barcode barcode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void theMassOnTheScaleHasChanged(IElectronicScale scale, Mass mass) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void theMassOnTheScaleHasExceededItsLimit(IElectronicScale scale) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void theMassOnTheScaleNoLongerExceedsItsLimit(IElectronicScale scale) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void coinsFull(CoinStorageUnit unit) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void coinAdded(CoinStorageUnit unit) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void coinsLoaded(CoinStorageUnit unit) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void coinsUnloaded(CoinStorageUnit unit) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void coinInserted(CoinSlot slot) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
