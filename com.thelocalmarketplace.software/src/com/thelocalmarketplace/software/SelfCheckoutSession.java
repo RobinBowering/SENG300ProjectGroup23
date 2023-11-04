@@ -33,6 +33,10 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	
 	SelfCheckoutController controlller;
 	
+	int OPEN_SESSION = 0;
+	int WEIGHT_DISCREPANCY = 1;
+	int PAYING_WITH_COIN = 2;
+	
 	BarcodeScanner scanner;
 	CoinStorageUnit coinStorage;
 	CoinValidator validator;
@@ -43,7 +47,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	BigDecimal total = BigDecimal.ZERO;
 	BigDecimal coinEntered = BigDecimal.ZERO;
 	
-	private boolean isBlocked = false;
+	private int blockedState = 0;
 
 	// Kelvin's Added variables
 	private ProductDatabases barcodeMap;
@@ -91,17 +95,17 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	//method to pay with coin
 	public void PayWithCoin(){
 		coinslot.activate();
-		double coinValue = 0;
+		BigDecimal coinValue = BigDecimal.ZERO;
 		
 		while(total.doubleValue() > 0) {
 			System.out.println("Total: " + total);
 			System.out.print("Insert cash: ");
-			coinValue = coinEntered.doubleValue();
+			coinValue = BigDecimal.valueOf(coinEntered.doubleValue());
 		}
 		
-		total -= coinValue;
+		total = total.subtract(coinValue);
 		
-		if(total <= 0) {
+		if(total.compareTo((BigDecimal.ZERO)) >= 0) {
 			coinslot.disactivate();
 			System.out.println("Payment completed");
 		}
@@ -109,7 +113,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	
 	//method for when weight discrepancy is detected
 	public void WeightDiscrepancyDetected() {
-		isBlocked = true;
+		blockedState = 0;
 		System.out.println("Customer screen: Weight discrepancy detected.");
 		System.out.println("Attendant screen: Weight discrepancy detected.");
 	}
@@ -117,7 +121,7 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	public void discrepancyCheck() throws OverloadedDevice {
 		actualMassOnScale = scale.getCurrentMassOnTheScale().inGrams();
 		
-		if 
+		if (true) {}
 		
 		
 	}
