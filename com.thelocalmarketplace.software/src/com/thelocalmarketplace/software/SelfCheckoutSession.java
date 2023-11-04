@@ -40,15 +40,15 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	ElectronicScale scale;
 	
 	ArrayList<Item> order = new ArrayList<Item>();
-	double total = 0;
+	BigDecimal total = BigDecimal.ZERO;
 	BigDecimal coinEntered = BigDecimal.ZERO;
 	
 	private boolean isBlocked = false;
 
 	// Kelvin's Added variables
 	private ProductDatabases barcodeMap;
-	private BigDecimal actualWeightOfCart;
-	private BigDecimal expectedWeightOfCart;
+	private BigDecimal actualMassOnScale;
+	private BigDecimal expectedMassOnScale;
 	private BigDecimal expectedMass;
 	
 	/**
@@ -77,13 +77,13 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 		
 		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(itemBarcode); // Gets the database of the barcode
 		expectedMass = BigDecimal.valueOf(product.getExpectedWeight()); // Gets expected weight of item
-		double price = product.getPrice(); // get the price from the database
+		BigDecimal price = BigDecimal.valueOf(product.getPrice()); // get the price from the database
 		
-		expectedWeightOfCart = expectedWeightOfCart.add(expectedMass); //Update the expected weight that should be on the scale
+		expectedMassOnScale = expectedMassOnScale.add(expectedMass); //Update the expected weight that should be on the scale
 
-		total += price; // Add item to the total price of customer cart
+		total = total.add(price); // Add item to the total price of customer cart
 		
-		if (expectedWeightOfCart != actualWeightOfCart) { // If there is a difference between expected and actual weight that should 
+		if (expectedMassOnScale != actualMassOnScale) { // If there is a difference between expected and actual weight that should 
 			WeightDiscrepancyDetected(); // be on the scale then call WeightDiscrepancyDetected
 		}
 		
@@ -117,7 +117,9 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	}
 	
 	public void discrepancyCheck() throws OverloadedDevice {
-		actualWeightOfCart = scale.getCurrentMassOnTheScale().inGrams();
+		actualMassOnScale = scale.getCurrentMassOnTheScale().inGrams();
+		
+		if 
 		
 		
 	}
