@@ -54,21 +54,30 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	private BigDecimal expectedMass;
 	
 	/**
-	 * Instantiates a Self Checkout Session
+	 * Instantiates a Self Checkout Session with all hardware enabled except coinslot
+	 * Checks for discrepancy
+	 * 
 	 * @param a Self Checkout Station with all hardware enabled
 	 * @param The self checkout controller which called the constructor
 	 */
 	public SelfCheckoutSession(SelfCheckoutStation station, SelfCheckoutController instantiator) {
 		
 		scale = station.baggingArea;
+		scale.enable();
 		
 		scanner = station.scanner;
+		scanner.enable();
 		
 		validator = station.coinValidator;
+		validator.enable();
 		
 		coinslot = station.coinSlot;
+		coinslot.disable();
 		
 		coinStorage = station.coinStorage;
+		coinStorage.enable();
+		
+		discrepancyCheck();
 		
 	}
 	
@@ -179,28 +188,16 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	}
 
 	@Override
-	public void enabled(IComponent<? extends IComponentObserver> component) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void enabled(IComponent<? extends IComponentObserver> component) {}
 
 	@Override
-	public void disabled(IComponent<? extends IComponentObserver> component) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void disabled(IComponent<? extends IComponentObserver> component) {}
 
 	@Override
-	public void turnedOn(IComponent<? extends IComponentObserver> component) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void turnedOn(IComponent<? extends IComponentObserver> component) {}
 
 	@Override
-	public void turnedOff(IComponent<? extends IComponentObserver> component) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void turnedOff(IComponent<? extends IComponentObserver> component) {}
 
 	@Override
 	public void validCoinDetected(CoinValidator validator, BigDecimal value) {
@@ -208,39 +205,23 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	}
 
 	@Override
-	public void invalidCoinDetected(CoinValidator validator) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void invalidCoinDetected(CoinValidator validator) {}
 
 	@Override
-	public void aDeviceHasBeenEnabled(IDevice<? extends IDeviceListener> device) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void aDeviceHasBeenEnabled(IDevice<? extends IDeviceListener> device) {}
 
 	@Override
-	public void aDeviceHasBeenDisabled(IDevice<? extends IDeviceListener> device) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void aDeviceHasBeenDisabled(IDevice<? extends IDeviceListener> device) {}
 
 	@Override
-	public void aDeviceHasBeenTurnedOn(IDevice<? extends IDeviceListener> device) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void aDeviceHasBeenTurnedOn(IDevice<? extends IDeviceListener> device) {}
 
 	@Override
-	public void aDeviceHasBeenTurnedOff(IDevice<? extends IDeviceListener> device) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void aDeviceHasBeenTurnedOff(IDevice<? extends IDeviceListener> device) {}
 
 	@Override
 	public void aBarcodeHasBeenScanned(IBarcodeScanner barcodeScanner, Barcode barcode) {
 		addItem(barcode);
-		
 	}
 
 	@Override
@@ -250,45 +231,24 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 	}
 
 	@Override
-	public void theMassOnTheScaleHasExceededItsLimit(IElectronicScale scale) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void theMassOnTheScaleHasExceededItsLimit(IElectronicScale scale) {}
 
 	@Override
-	public void theMassOnTheScaleNoLongerExceedsItsLimit(IElectronicScale scale) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void theMassOnTheScaleNoLongerExceedsItsLimit(IElectronicScale scale) {}
 
 	@Override
-	public void coinsFull(CoinStorageUnit unit) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void coinsFull(CoinStorageUnit unit) {}
 
 	@Override
-	public void coinAdded(CoinStorageUnit unit) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void coinAdded(CoinStorageUnit unit) {}
 
 	@Override
-	public void coinsLoaded(CoinStorageUnit unit) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void coinsLoaded(CoinStorageUnit unit) {}
 
 	@Override
-	public void coinsUnloaded(CoinStorageUnit unit) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void coinsUnloaded(CoinStorageUnit unit) {}
 
 	@Override
-	public void coinInserted(CoinSlot slot) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void coinInserted(CoinSlot slot) {}
 
 }
