@@ -1,4 +1,7 @@
 package com.thelocalmarketplace.software;
+
+import java.math.BigDecimal;
+
 import com.jjjwelectronics.IDevice;
 import com.jjjwelectronics.IDeviceListener;
 import com.jjjwelectronics.Mass;
@@ -9,109 +12,44 @@ import com.jjjwelectronics.scanner.BarcodeScannerListener;
 import com.jjjwelectronics.scanner.IBarcodeScanner;
 import com.tdc.IComponent;
 import com.tdc.IComponentObserver;
-import com.tdc.coin.CoinStorageUnit;
-import com.tdc.coin.CoinStorageUnitObserver;
+import com.tdc.coin.*;
+import com.thelocalmarketplace.hardware.SelfCheckoutStation;
+import com.thelocalmarketplace.hardware.external.ProductDatabases;
 
-public class SelfCheckoutController implements CoinStorageUnitObserver, ElectronicScaleListener, BarcodeScannerListener {
+public class SelfCheckoutController {
 	
-	public SelfCheckoutSession StartSession() {
-		return null;
+	SelfCheckoutStation hardware;
+	
+	/**
+	 * Takes a SelfCheckoutMachine that is plugged in and turned on
+	 */
+	public SelfCheckoutController(SelfCheckoutStation station) {
+		hardware = station;
 	}
-
-	@Override
-	public void enabled(IComponent<? extends IComponentObserver> component) {
-		// TODO Auto-generated method stub
+	
+	/**
+	 * Confirms that all needed hardware is enabled, and instantiates a SelfCheckoutSession if so
+	 */
+	public void startSession() {
+		
+		if (allEnabled()) {
+			
+			SelfCheckoutSession session = new SelfCheckoutSession(hardware,this);
+			
+			hardware.baggingArea.register(session);
+			hardware.scanner.register(session);
+			hardware.coinSlot.attach(session);
+			hardware.coinValidator.attach(session);
+			hardware.coinStorage.attach(session);
+		}
 		
 	}
-
-	@Override
-	public void disabled(IComponent<? extends IComponentObserver> component) {
-		// TODO Auto-generated method stub
-		
+	private boolean allEnabled() {
+		if ( !hardware.baggingArea.isDisabled() ) {
+			if ( !hardware.baggingArea)
+		}
+			
 	}
-
-	@Override
-	public void turnedOn(IComponent<? extends IComponentObserver> component) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void turnedOff(IComponent<? extends IComponentObserver> component) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void aDeviceHasBeenEnabled(IDevice<? extends IDeviceListener> device) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void aDeviceHasBeenDisabled(IDevice<? extends IDeviceListener> device) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void aDeviceHasBeenTurnedOn(IDevice<? extends IDeviceListener> device) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void aDeviceHasBeenTurnedOff(IDevice<? extends IDeviceListener> device) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void aBarcodeHasBeenScanned(IBarcodeScanner barcodeScanner, Barcode barcode) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void theMassOnTheScaleHasChanged(IElectronicScale scale, Mass mass) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void theMassOnTheScaleHasExceededItsLimit(IElectronicScale scale) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void theMassOnTheScaleNoLongerExceedsItsLimit(IElectronicScale scale) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void coinsFull(CoinStorageUnit unit) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void coinAdded(CoinStorageUnit unit) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void coinsLoaded(CoinStorageUnit unit) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void coinsUnloaded(CoinStorageUnit unit) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 }
+	
