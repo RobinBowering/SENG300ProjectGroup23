@@ -76,9 +76,11 @@ public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObser
 		Barcode itemBarcode = item.getBarcode(); //Gets the barcode of the scanned item
 		
 		BarcodedProduct product = ProductDatabases.BARCODED_PRODUCT_DATABASE.get(itemBarcode); // Gets the database of the barcode
-		expectedMass = product.getExpectedWeight(); // Gets expected weight of item
-		expectedWeightOfCart += expectedMass; //Update the expected weight that should be on the scale
-		double price = barcodeMap.get(product); // get the price from the database
+		expectedMass = BigDecimal.valueOf(product.getExpectedWeight()); // Gets expected weight of item
+		double price = product.getPrice(); // get the price from the database
+		
+		expectedWeightOfCart = expectedWeightOfCart.add(expectedMass); //Update the expected weight that should be on the scale
+
 		total += price; // Add item to the total price of customer cart
 		
 		if (expectedWeightOfCart != actualWeightOfCart) { // If there is a difference between expected and actual weight that should 
