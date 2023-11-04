@@ -9,36 +9,52 @@ public class SelfCheckoutController {
 	
 	SelfCheckoutStation hardware;
 	
+	boolean activeSession = false;
+	
 	/**
 	 * Takes a SelfCheckoutMachine that is plugged in and turned on
 	 */
 	public SelfCheckoutController(SelfCheckoutStation station) {
 		hardware = station;
+		disableAll();
 	}
+	
+
 	
 	/**
 	 * Confirms that all needed hardware is enabled, and instantiates a SelfCheckoutSession if so
 	 */
 	public void startSession() {
 		
-		
+		if (!activeSession) {
 			
-		SelfCheckoutSession session = new SelfCheckoutSession(hardware,this);
+			activeSession = true;
 			
-		hardware.baggingArea.register(session);
-		hardware.scanner.register(session);
-		hardware.coinSlot.attach(session);
-		hardware.coinValidator.attach(session);
-		hardware.coinStorage.attach(session);
-		
+			SelfCheckoutSession session = new SelfCheckoutSession(hardware,this);
+			
+			hardware.baggingArea.register(session);
+			hardware.scanner.register(session);
+			hardware.coinSlot.attach(session);
+			hardware.coinValidator.attach(session);
+			hardware.coinStorage.attach(session);
+			
+		}		
 	}
-	private boolean allEnabled() {
-		if ( !hardware.baggingArea.isDisabled() ) {
-			if ( !hardware.scanner.isDisabled() {
-				
-			}
-		}
-			
+	
+	public void sessionEnded() {
+		activeSession = false;
+		disableAll();
+	}
+	
+	/**
+	 * Disables non-touchscreen hardware until a session is started
+	 */
+	private void disableAll() {
+		hardware.baggingArea.disable();
+		hardware.scanner.disable();
+		hardware.coinSlot.disable();
+		hardware.coinValidator.disable();
+		hardware.coinValidator.disable();
 	}
 	
 }
