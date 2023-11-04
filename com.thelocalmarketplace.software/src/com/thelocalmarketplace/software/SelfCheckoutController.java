@@ -2,10 +2,25 @@ package com.thelocalmarketplace.software;
 
 import com.thelocalmarketplace.hardware.SelfCheckoutStation;
 
+/**
+ * 
+ * @author Robin Bowering UCID 30123373
+ * @author Matt Gibson UCID 30117091
+ * @author Kelvin Jamila UCID 30117164
+ * @author Nikki Kim UCID 30189188
+ * @author Hillary Nguyen UCID 30161137
+ * 
+ * Class responsible for starting sessions and managing hardware activity outside of sessions
+ * 
+ * Should be constructed with a configured Self-Checkout machine. Does not configure any hardware besides enabling and disabling where appropriate
+ */
 public class SelfCheckoutController {
 	
 	SelfCheckoutStation hardware;
 	
+	/**
+	 * State variable indicating whether an active session is in progress
+	 */
 	boolean activeSession = false;
 	
 	/**
@@ -20,7 +35,7 @@ public class SelfCheckoutController {
 
 	
 	/**
-	 * Instantiates a SelfCheckoutSession and registers it as a listener for appropriate hardware
+	 * If there is no session in progress, instantiates a SelfCheckoutSession and registers it as a listener for appropriate hardware
 	 */
 	public void startSession() {
 		
