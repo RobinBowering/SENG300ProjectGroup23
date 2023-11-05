@@ -29,6 +29,7 @@ public class SelfCheckoutController {
 	 * State variable indicating whether an active session is in progress
 	 */
 	boolean activeSession = false;
+	SelfCheckoutSession currentSession;
 	
 	/**
 	 * Takes a SelfCheckoutMachine that is plugged in and turned on and associates it with a field in new controller
@@ -42,7 +43,8 @@ public class SelfCheckoutController {
 
 	
 	/**
-	 * If there is no session in progress, instantiates a SelfCheckoutSession and registers it as a listener for appropriate hardware
+	 * If there is no session in progress, returns a new SelfCheckoutSession and registers it as a listener for appropriate hardware
+	 * If there is a session in progress, returns that session
 	 */
 	public SelfCheckoutSession startSession() {
 		
@@ -50,16 +52,15 @@ public class SelfCheckoutController {
 			
 			activeSession = true;
 			
-			SelfCheckoutSession session = new SelfCheckoutSession(hardware,this);
+			currentSession = new SelfCheckoutSession(hardware,this);
 			
-			hardware.baggingArea.register(session);
-			hardware.scanner.register(session);
-			hardware.coinSlot.attach(session);
-			hardware.coinValidator.attach(session);
-			hardware.coinStorage.attach(session);
-
-			return session;
-		}		
+			hardware.baggingArea.register(currentSession);
+			hardware.scanner.register(currentSession);
+			hardware.coinSlot.attach(currentSession);
+			hardware.coinValidator.attach(currentSession);
+			hardware.coinStorage.attach(currentSession);
+		}
+		return currentSession;
 	}
 	
 	/**

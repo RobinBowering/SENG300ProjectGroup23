@@ -1,0 +1,10 @@
+/AbstractComponent.class
+/CashOverloadException.class
+/ComponentFailure.class
+/DisabledException.class
+/IComponent.class
+/IComponentObserver.class
+/NoCashAvailableException.class
+/PassiveSource.class
+/Sink.class
+/Source.class
