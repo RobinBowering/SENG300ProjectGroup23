@@ -59,7 +59,7 @@ public class AddItemTest {
         
         SelfCheckoutController controller = new SelfCheckoutController(hardware);
         
-		session = new SelfCheckoutSession(hardware, controller);
+		session = controller.startSession();
 		
 		ProductDatabases.BARCODED_PRODUCT_DATABASE.put(testBarcode1, testProduct1);
 		ProductDatabases.BARCODED_PRODUCT_DATABASE.put(testBarcode2, testProduct2);
