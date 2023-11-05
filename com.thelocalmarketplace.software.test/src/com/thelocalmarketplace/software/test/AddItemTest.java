@@ -24,6 +24,7 @@ import com.tdc.coin.Coin;
 import com.tdc.coin.CoinSlot;
 import com.thelocalmarketplace.hardware.BarcodedProduct;
 import com.thelocalmarketplace.hardware.SelfCheckoutStation;
+import com.thelocalmarketplace.hardware.external.ProductDatabases;
 import com.thelocalmarketplace.software.SelfCheckoutController;
 import com.thelocalmarketplace.software.SelfCheckoutSession;
 
@@ -59,22 +60,24 @@ public class AddItemTest {
         SelfCheckoutController controller = new SelfCheckoutController(hardware);
         
 		session = new SelfCheckoutSession(hardware, controller);
+		
+		ProductDatabases.BARCODED_PRODUCT_DATABASE.put(testBarcode1, testProduct1);
+		ProductDatabases.BARCODED_PRODUCT_DATABASE.put(testBarcode2, testProduct2);
 	}
 	
 	
 	//test for barcode scanner enabled, but invalid barcode (null)
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void NullBarcode() {
-		session.addItem(testBarcode1);
-		assertEquals(1, session.orderTotal);
+		session.addItem(null);
 	}
 	
 	
 	//test for barcode scanner enabled, and valid barcode is scanned
-	//since product database isn't populated yet, will get null pointer exception
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void ValidBarcode() {
-		session.addItem(barcode);
+		session.addItem(testBarcode1);
+		assertEquals(BigDecimal.ONE, session.orderTotal);
 	}
 	
 	
@@ -92,18 +95,41 @@ public class AddItemTest {
 		assertTrue(session.scanner.isDisabled());
 	}
 	
-	/**
-	//test for discrepancy check overload
-	public void DiscrepancyCheckNoOverload() {
+	@After
+	public void clearDatabase() {
+		ProductDatabases.BARCODED_PRODUCT_DATABASE.clear();
+	}
+	
+	//test if expected mass initialized to 0 when null
+	@Test
+	public void ExpectedMassInitialized() {
+		session.expectedMassOnScale = null;
+		session.discrepancyCheck();
+		
+		assertEquals(BigDecimal.ZERO, session.expectedMassOnScale);
+	}
+	
+	//test for discrepancy check when it exists
+	@Test
+	public void NoDiscrepancyCheckNoOverload() {
 		session.expectedMassOnScale = BigDecimal.valueOf(100);
 		
 		session.actualMassOnScale = BigDecimal.valueOf(150);
-	      
+	    
+		session.discrepancyCheck();
+		assertTrue(session.scanner.isDisabled());
+		
+	    }
 	
-	        // Call the discrepancyCheck method
-	        session.discrepancyCheck();
-	
-	        // Assert that weightDiscrepancy is not set
-	        assertFalse(session.isWeightDiscrepancy());
-	    }**/
+	//test for discrepancy check  when it doesn't exist
+	@Test
+	public void DiscrepancyCheckNoOverload() {
+		session.expectedMassOnScale = BigDecimal.valueOf(100);
+		
+		session.actualMassOnScale = BigDecimal.valueOf(100);
+	    
+		session.discrepancyCheck();
+		assertFalse(session.scanner.isDisabled());
+		
+	    }
 }
