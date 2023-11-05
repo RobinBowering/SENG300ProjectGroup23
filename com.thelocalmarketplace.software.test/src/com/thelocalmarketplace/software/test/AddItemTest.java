@@ -6,6 +6,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,10 +19,12 @@ import com.tdc.CashOverloadException;
 import com.tdc.DisabledException;
 import com.tdc.coin.Coin;
 import com.tdc.coin.CoinSlot;
+import com.thelocalmarketplace.hardware.BarcodedProduct;
 import com.thelocalmarketplace.hardware.SelfCheckoutStation;
 import com.thelocalmarketplace.software.SelfCheckoutController;
 import com.thelocalmarketplace.software.SelfCheckoutSession;
 
+import ca.ucalgary.seng300.simulation.NullPointerSimulationException;
 import powerutility.PowerGrid;
 
 public class AddItemTest {
@@ -27,6 +32,7 @@ public class AddItemTest {
 	SelfCheckoutSession session;
 	Coin coin;
 	Barcode barcode;
+
 	
 	
 	@Before 
@@ -35,32 +41,41 @@ public class AddItemTest {
         hardware.plugIn(PowerGrid.instance());
         hardware.turnOn();
         
+     
+        
         SelfCheckoutController controller = new SelfCheckoutController(hardware);
         
 		session = new SelfCheckoutSession(hardware, controller);
 	}
 	
-		//test for barcode scanner enabled, but invalid barcode (null)
+	
+	//test for barcode scanner enabled, but invalid barcode (null)
 	@Test(expected = NullPointerException.class)
 	public void NullBarcode() {
 		session.addItem(null);
 	}
 	
+	
 	//test for barcode scanner enabled, and valid barcode is scanned
+	//since product database isn't populated yet, will get null pointer exception
+	@Test(expected = NullPointerException.class)
 	public void ValidBarcode() {
 		session.addItem(barcode);
-		assertEquals(BigDecimal.ZERO, session.orderTotal);
+		
 	}
 	
-	//Test if barcode scanner is enabled, and valid barcode is scanned, and Self checkout system is blocked/barcode scanner is blocked
-	public void ScannerBlocked() {
-		return;
+	
+	//test for barcode scanner is blocked when weight discrepancy detected
+	@Test
+	public void ScannerBlockedByWeightDiscrepancy() {
+		session.weightDiscrepancyDetected();
+		assertTrue(session.scanner.isDisabled());
 	}
 	
-	//Test if system is back to start state after weight is updated
-	public void ReturnToStartState() {
-		return;
+	//test for barcode scanner is blocked when pay with coin
+	@Test
+	public void ScannerBlockedByPayWithCoin() {
+		session.payWithCoin();
+		assertTrue(session.scanner.isDisabled());
 	}
-
-	
 }
