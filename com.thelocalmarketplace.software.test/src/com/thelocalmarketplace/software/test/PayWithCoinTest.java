@@ -52,6 +52,7 @@ public class PayWithCoinTest {
 		currentSession.weightDiscrepancy = true;
 		currentSession.payWithCoin();
 		
+		Assert.assertTrue(hardware.coinSlot.isDisabled());
 	}
 	
 	@Test
@@ -69,7 +70,7 @@ public class PayWithCoinTest {
 		BigDecimal payment = new BigDecimal(0);
 		currentSession.processPayment(payment);
 		
-		Assert.assertTrue(hardware.coinSlot.isDisabled());
+		Assert.assertFalse(hardware.coinSlot.isDisabled());
 	}
 	
 	@Test
