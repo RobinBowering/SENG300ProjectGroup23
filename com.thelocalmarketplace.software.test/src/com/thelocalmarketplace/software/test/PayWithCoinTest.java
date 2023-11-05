@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.tdc.DisabledException;
 import com.thelocalmarketplace.hardware.SelfCheckoutStation;
 import com.thelocalmarketplace.software.SelfCheckoutController;
 import com.thelocalmarketplace.software.SelfCheckoutSession;
@@ -28,6 +27,7 @@ public class PayWithCoinTest {
 	private SelfCheckoutController controller;
 	private SelfCheckoutStation hardware;
 	private SelfCheckoutSession currentSession;
+
 	
 	@Before 
 	public void setup() {
@@ -37,6 +37,7 @@ public class PayWithCoinTest {
         controller = new SelfCheckoutController(hardware);
         currentSession = new SelfCheckoutSession(hardware, controller);
     }
+	
 	
 	@Test
 	public void validPayWithCoinTest() { 
@@ -66,7 +67,7 @@ public class PayWithCoinTest {
 		Assert.assertTrue(hardware.coinSlot.isDisabled());
 	} 
 	
-	@Test 
+	@Test
 	public void amountPaidZero() {
 		BigDecimal payment = new BigDecimal(0);
 		currentSession.processPayment(payment);
@@ -80,5 +81,5 @@ public class PayWithCoinTest {
 		currentSession.processPayment(payment);
 
 		Assert.assertFalse(hardware.coinSlot.isDisabled());
-	}
+	} 
 }
