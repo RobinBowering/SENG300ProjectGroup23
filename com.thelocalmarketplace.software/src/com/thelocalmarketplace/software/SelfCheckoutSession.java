@@ -85,12 +85,12 @@ BarcodeScannerListener {
 	/**
 	 * State variable, signaling if the session has an ongoing weight discrepancy
 	 */
-	private boolean weightDiscrepancy = false;
+	public boolean weightDiscrepancy = false;
 	
 	/**
 	 * State variable, signaling if the customer has entered the payment phase (and can no longer add items)
 	 */
-	private boolean payingForOrder = false;
+	public boolean payingForOrder = false;
 
 	// Kelvin's Added variables
 	/**
@@ -167,13 +167,13 @@ BarcodeScannerListener {
 	 */
 	public void payWithCoin() {
 		
-		scanner.disable();
+		scanner.disable(); 
 		coinslot.enable();
 		payingForOrder = true;
 		
 		System.out.println("Total: $" + orderTotal.toString());
 		System.out.print("Insert coin(s): ");
-	}
+	} 
 	
 	/**
 	 * Updates amount paid, prints balance if one remains, and ends session if payment is sufficient
@@ -188,7 +188,7 @@ BarcodeScannerListener {
 			
 			coinslot.disable();
 			System.out.println("Payment completed, ending session");
-			controller.sessionEnded();
+			controller.sessionEnded();  
 			
 			//GUI scene would reset here
 			
