@@ -1,15 +1,21 @@
 package com.thelocalmarketplace.software.test;
 
+import static org.junit.Assert.assertFalse;
+
 import java.math.BigDecimal;
+import java.util.Currency;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.tdc.CashOverloadException;
 import com.tdc.DisabledException;
 import com.thelocalmarketplace.hardware.SelfCheckoutStation;
 import com.thelocalmarketplace.software.SelfCheckoutController;
 import com.thelocalmarketplace.software.SelfCheckoutSession;
+
+import com.tdc.coin.*;
 
 import powerutility.PowerGrid;
 
@@ -28,6 +34,8 @@ public class PayWithCoinTest {
 	private SelfCheckoutController controller;
 	private SelfCheckoutStation hardware;
 	private SelfCheckoutSession currentSession;
+	
+	private Coin loonie = new Coin(Currency.getInstance("CAD"), BigDecimal.ONE);
 
 	
 	@Before 
@@ -36,7 +44,7 @@ public class PayWithCoinTest {
         hardware.plugIn(PowerGrid.instance());
         hardware.turnOn(); 
         controller = new SelfCheckoutController(hardware);
-        currentSession = new SelfCheckoutSession(hardware, controller);
+        currentSession = controller.startSession();
         currentSession.orderTotal = BigDecimal.valueOf(25);
     }
 	
@@ -89,5 +97,16 @@ public class PayWithCoinTest {
 		currentSession.processPayment(payment);
 		
 		Assert.assertTrue(hardware.coinSlot.isDisabled());
+	}
+	
+	@Test
+	public void fullPaymentEndsSession() throws DisabledException, CashOverloadException {
+		currentSession.orderTotal = BigDecimal.ONE;
+		
+		currentSession.payWithCoin();
+		
+		hardware.coinSlot.receive(loonie);
+		
+		assertFalse(controller.activeSession);
 	}
 }

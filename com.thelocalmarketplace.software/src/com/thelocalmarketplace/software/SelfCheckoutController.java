@@ -21,7 +21,7 @@ public class SelfCheckoutController {
 	/**
 	 * State variable indicating whether an active session is in progress
 	 */
-	boolean activeSession = false;
+	public boolean activeSession = false;
 	SelfCheckoutSession currentSession;
 	
 	/**
