@@ -81,4 +81,13 @@ public class PayWithCoinTest {
 
 		Assert.assertFalse(hardware.coinSlot.isDisabled());
 	} 
+	
+	@Test
+	public void amountPaidEqualTotal() {
+		currentSession.payWithCoin();
+		BigDecimal payment = new BigDecimal(25);
+		currentSession.processPayment(payment);
+		
+		Assert.assertTrue(hardware.coinSlot.isDisabled());
+	}
 }
