@@ -28,6 +28,17 @@ import com.thelocalmarketplace.software.SelfCheckoutSession;
 
 import powerutility.PowerGrid;
 
+/**
+ * 
+ * @author Robin Bowering UCID 30123373
+ * @author Kelvin Jamila UCID 30117164
+ * @author Nikki Kim UCID 30189188
+ * @author Hillary Nguyen UCID 30161137
+ * @author Matt Gibson UCID 30117091
+ * 
+ * Test class for weight discrepancy
+ * 
+ */
 public class WeightDiscrepancyTest {
 	
 
