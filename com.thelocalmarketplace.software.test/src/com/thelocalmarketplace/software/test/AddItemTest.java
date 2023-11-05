@@ -105,7 +105,7 @@ public class AddItemTest {
 	public void ExpectedMassInitialized() {
 		session.expectedMassOnScale = null;
 		session.discrepancyCheck();
-		
+		 
 		assertEquals(BigDecimal.ZERO, session.expectedMassOnScale);
 	}
 	

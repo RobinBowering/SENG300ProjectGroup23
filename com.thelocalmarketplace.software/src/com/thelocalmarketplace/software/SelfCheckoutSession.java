@@ -189,6 +189,7 @@ BarcodeScannerListener {
 		if (amountPaid.compareTo(orderTotal) >= 0) {
 			
 			coinslot.disable();
+			System.out.println("Amount Received: $" + currentPayment.toString());
 			System.out.println("Payment completed, ending session");
 			controller.sessionEnded();  
 			 
