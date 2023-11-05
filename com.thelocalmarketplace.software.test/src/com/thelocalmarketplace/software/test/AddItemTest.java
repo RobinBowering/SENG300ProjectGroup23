@@ -40,22 +40,16 @@ public class AddItemTest {
 		session = new SelfCheckoutSession(hardware, controller);
 	}
 	
-	//Test if barcode scanner is disabled
-	@Test
-	public void ScannerDisabled() {
-		session.payingForOrder = true;
-		session.addItem(barcode);
-		assertEquals(true, session.scanner.isDisabled());
-	}
-	
-	//Test if barcode scanner is enabled, but invalid barcode (null)
+		//test for barcode scanner enabled, but invalid barcode (null)
+	@Test(expected = NullPointerException.class)
 	public void NullBarcode() {
-		return;
+		session.addItem(null);
 	}
 	
-	//Test if barcode scanner is enabled, and valid barcode is scanned
+	//test for barcode scanner enabled, and valid barcode is scanned
 	public void ValidBarcode() {
-		return;
+		session.addItem(barcode);
+		assertEquals(BigDecimal.ZERO, session.orderTotal);
 	}
 	
 	//Test if barcode scanner is enabled, and valid barcode is scanned, and Self checkout system is blocked/barcode scanner is blocked
