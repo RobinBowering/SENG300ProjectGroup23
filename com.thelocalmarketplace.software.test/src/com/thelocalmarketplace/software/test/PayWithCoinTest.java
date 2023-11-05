@@ -28,7 +28,6 @@ public class PayWithCoinTest {
 	private SelfCheckoutController controller;
 	private SelfCheckoutStation hardware;
 	private SelfCheckoutSession currentSession;
-	private BigDecimal orderTotal;
 	
 	@Before 
 	public void setup() {
@@ -41,16 +40,45 @@ public class PayWithCoinTest {
 	
 	@Test
 	public void validPayWithCoinTest() { 
-		currentSession.payingForOrder = true;
 		currentSession.payWithCoin();
-
+		Assert.assertEquals(true, currentSession.payingForOrder);
 	}  
 	
 	@Test
-	public void scannerDisabledTest() {
-		currentSession.payingForOrder = true; 
+	public void scannerEnabledTest() {
 		currentSession.payWithCoin(); 
+		hardware.scanner.enable();
+		Assert.assertEquals(false, currentSession.payingForOrder);
+	}   
+	
+	@Test
+	public void slotDisabledTest() {
+		currentSession.payWithCoin();
+		hardware.coinSlot.disable();
+		Assert.assertEquals(false, currentSession.payingForOrder);
+	}
+	
+	@Test
+	public void amountPaidMoreTotal() {
+		BigDecimal payment = new BigDecimal(10);
+		currentSession.processPayment(payment);
 		
-		Assert.assertEquals(true, currentSession.payingForOrder);
-	}  
+		Assert.assertTrue(hardware.coinSlot.isDisabled());
+	} 
+	
+	@Test 
+	public void amountPaidZero() {
+		BigDecimal payment = new BigDecimal(0);
+		currentSession.processPayment(payment);
+		
+		Assert.assertTrue(hardware.coinSlot.isDisabled());
+	}
+	
+	@Test
+	public void amountPaidLessTotal() {
+		BigDecimal payment = new BigDecimal(-5);
+		currentSession.processPayment(payment);
+
+		Assert.assertFalse(hardware.coinSlot.isDisabled());
+	}
 }
