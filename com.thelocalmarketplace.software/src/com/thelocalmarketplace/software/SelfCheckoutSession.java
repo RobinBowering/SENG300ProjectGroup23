@@ -169,6 +169,8 @@ BarcodeScannerListener {
 	 */
 	public void payWithCoin() {
 		
+		if (weightDiscrepancy) {return;}
+		
 		scanner.disable(); 
 		coinslot.enable();
 		payingForOrder = true;
