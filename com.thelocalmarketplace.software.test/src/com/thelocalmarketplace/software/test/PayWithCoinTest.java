@@ -63,7 +63,7 @@ public class PayWithCoinTest {
 	
 	@Test
 	public void amountPaidMoreTotal() {
-		BigDecimal payment = new BigDecimal(10);
+		BigDecimal payment = new BigDecimal(30);
 		currentSession.processPayment(payment);
 		
 		Assert.assertTrue(hardware.coinSlot.isDisabled());
@@ -79,7 +79,7 @@ public class PayWithCoinTest {
 	
 	@Test
 	public void amountPaidLessTotal() {
-		BigDecimal payment = new BigDecimal(-5);
+		BigDecimal payment = new BigDecimal(10);
 		currentSession.processPayment(payment);
 
 		Assert.assertFalse(hardware.coinSlot.isDisabled());
