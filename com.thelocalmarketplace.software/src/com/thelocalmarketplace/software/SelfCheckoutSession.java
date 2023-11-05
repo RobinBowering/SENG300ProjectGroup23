@@ -271,6 +271,7 @@ BarcodeScannerListener {
 					weightDiscrepancyDetected();
 					return; //so that else block is not required further down
 			}
+			return;
 		}
 		
 		if (difference.compareTo(sensitivity) <= 0) {
