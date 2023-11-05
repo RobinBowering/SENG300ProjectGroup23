@@ -75,12 +75,12 @@ BarcodeScannerListener {
 	/**
 	 * The total cost of all items in order
 	 */
-	BigDecimal orderTotal = BigDecimal.ZERO;
+	public BigDecimal orderTotal = BigDecimal.ZERO;
 	
 	/**
 	 * The amount which has been received against the customer's balance through processPayment()
 	 */
-	BigDecimal amountPaid = BigDecimal.ZERO;
+	public BigDecimal amountPaid = BigDecimal.ZERO;
 	
 	/**
 	 * State variable, signaling if the session has an ongoing weight discrepancy
@@ -113,9 +113,9 @@ BarcodeScannerListener {
 	public SelfCheckoutSession(SelfCheckoutStation station, SelfCheckoutController instantiator) {
 		
 		controller = instantiator;
-
-		scale = station.baggingArea; 
-		scale.enable();
+		
+		scale = station.baggingArea;
+		scale.enable();  
 		
 		scanner = station.scanner;
 		scanner.enable();
@@ -131,7 +131,7 @@ BarcodeScannerListener {
 		
 		discrepancyCheck();
 		
-	}
+	} 
 	
 	//method to start the session
 	public void startSession() {
@@ -174,7 +174,7 @@ BarcodeScannerListener {
 		
 		System.out.println("Total: $" + orderTotal.toString());
 		System.out.print("Insert coin(s): ");
-	}   
+	}     
 	
 	/**
 	 * Updates amount paid, prints balance if one remains, and ends session if payment is sufficient
@@ -190,7 +190,7 @@ BarcodeScannerListener {
 			coinslot.disable();
 			System.out.println("Payment completed, ending session");
 			controller.sessionEnded();  
-			
+			 
 			//GUI scene would reset here
 			
 		}
