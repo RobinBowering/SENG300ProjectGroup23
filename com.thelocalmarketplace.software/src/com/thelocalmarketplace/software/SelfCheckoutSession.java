@@ -44,7 +44,7 @@ BarcodeScannerListener {
 	 * Barcode Scanner of associated self checkout machine, representative of hardware
 	 * component
 	 */
-	BarcodeScanner scanner;
+	public BarcodeScanner scanner;
 	/**
 	 * Coin Storage Unit of associated self checkout machine, representative of 
 	 * hardware component
@@ -256,7 +256,10 @@ BarcodeScannerListener {
 			System.out.println("SCALE OVERLOADED. PLEASE REMOVE WEIGHT AND ALERT STAFF");
 			return;
 		}
-		
+		// Ensure that expectedMassOnScale is initialized
+	    if (expectedMassOnScale == null) {
+	        expectedMassOnScale = BigDecimal.ZERO; // Initialize it to zero 
+	    }
 		BigDecimal difference = actualMassOnScale.subtract(expectedMassOnScale).abs();
 		BigDecimal sensitivity = scale.getSensitivityLimit().inGrams();
 		
