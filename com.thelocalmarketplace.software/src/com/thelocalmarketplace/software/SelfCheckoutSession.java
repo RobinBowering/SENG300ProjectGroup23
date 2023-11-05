@@ -115,7 +115,7 @@ BarcodeScannerListener {
 		controller = instantiator;
 		
 		scale = station.baggingArea;
-    scale.enable();
+		scale.enable();
 
 		
 		scanner = station.scanner;

@@ -100,7 +100,7 @@ public class WeightDiscrepancyTest {
 	}
 	
 	@Test
-	public void triggerDiscrepancyItemRemoved() {		
+	public void triggerDiscrepancyItemRemoved() {
 	}
 	
 	@After
