@@ -96,12 +96,12 @@ BarcodeScannerListener {
 	/**
 	 * Mass as reported by the scale through listener method
 	 */
-	private BigDecimal actualMassOnScale;
+	public BigDecimal actualMassOnScale;
 	
 	/**
 	 * Expected mass based on sum of all items in order's mass
 	 */
-	private BigDecimal expectedMassOnScale = BigDecimal.ZERO;
+	public BigDecimal expectedMassOnScale = BigDecimal.ZERO;
 	
 	/**
 	 * Instantiates a Self Checkout Session with all hardware enabled except coinslot
