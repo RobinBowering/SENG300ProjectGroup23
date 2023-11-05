@@ -173,7 +173,7 @@ BarcodeScannerListener {
 		
 		System.out.println("Total: $" + orderTotal.toString());
 		System.out.print("Insert coin(s): ");
-	} 
+	}   
 	
 	/**
 	 * Updates amount paid, prints balance if one remains, and ends session if payment is sufficient

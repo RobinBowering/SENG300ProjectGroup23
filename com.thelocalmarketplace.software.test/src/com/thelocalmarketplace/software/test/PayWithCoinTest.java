@@ -43,11 +43,14 @@ public class PayWithCoinTest {
 	public void validPayWithCoinTest() { 
 		currentSession.payingForOrder = true;
 		currentSession.payWithCoin();
+
 	}  
 	
-	@Test(expected = DisabledException.class)
-	public void slotDisabledTest() {
-		currentSession.payingForOrder = false;
+	@Test
+	public void scannerDisabledTest() {
+		currentSession.payingForOrder = true;
 		currentSession.payWithCoin();
-	} 
+		
+		Assert.assertEquals(true, currentSession.payingForOrder);
+	}   
 }
