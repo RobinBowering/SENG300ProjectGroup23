@@ -37,7 +37,7 @@ public class SelfCheckoutController {
 	/**
 	 * If there is no session in progress, instantiates a SelfCheckoutSession and registers it as a listener for appropriate hardware
 	 */
-	public void startSession() {
+	public SelfCheckoutSession startSession() {
 		
 		if (!activeSession) {
 			
@@ -50,7 +50,8 @@ public class SelfCheckoutController {
 			hardware.coinSlot.attach(session);
 			hardware.coinValidator.attach(session);
 			hardware.coinStorage.attach(session);
-			
+
+			return session;
 		}		
 	}
 	
