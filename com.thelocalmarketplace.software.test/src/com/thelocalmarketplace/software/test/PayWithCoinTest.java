@@ -48,9 +48,9 @@ public class PayWithCoinTest {
 	
 	@Test
 	public void scannerDisabledTest() {
-		currentSession.payingForOrder = true;
-		currentSession.payWithCoin();
+		currentSession.payingForOrder = true; 
+		currentSession.payWithCoin(); 
 		
 		Assert.assertEquals(true, currentSession.payingForOrder);
-	}   
+	}  
 }

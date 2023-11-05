@@ -115,6 +115,7 @@ BarcodeScannerListener {
 		controller = instantiator;
 		
 		scale.enable();
+		scale = station.baggingArea; 
 		
 		scanner = station.scanner;
 		scanner.enable();
@@ -216,7 +217,7 @@ BarcodeScannerListener {
 		weightDiscrepancy = true;
 		System.out.println("Customer screen: Weight discrepancy detected.");
 		System.out.println("Attendant screen: Weight discrepancy detected.");
-	}
+	} 
 	
 	/**
 	 * Unblocks a blocked session by reenabling scanner, and notes that the issue is resolved
