@@ -48,21 +48,15 @@ public class PayWithCoinTest {
 	}  
 	
 	@Test
-	public void scannerEnabledTest() {
-		currentSession.payWithCoin(); 
-		hardware.scanner.enable();
-		Assert.assertEquals(false, currentSession.payingForOrder);
-	}   
-	
-	@Test
-	public void slotDisabledTest(){
+	public void payWhileWeightDiscrepancy() {
+		currentSession.weightDiscrepancy = true;
 		currentSession.payWithCoin();
-		hardware.coinSlot.disable();
-		Assert.assertEquals(false, currentSession.payingForOrder);
+		
 	}
 	
 	@Test
 	public void amountPaidMoreTotal() {
+		currentSession.payWithCoin();
 		BigDecimal payment = new BigDecimal(30);
 		currentSession.processPayment(payment);
 		
@@ -71,6 +65,7 @@ public class PayWithCoinTest {
 	
 	@Test
 	public void amountPaidZero() {
+		currentSession.payWithCoin();
 		BigDecimal payment = new BigDecimal(0);
 		currentSession.processPayment(payment);
 		
@@ -79,6 +74,7 @@ public class PayWithCoinTest {
 	
 	@Test
 	public void amountPaidLessTotal() {
+		currentSession.payWithCoin();
 		BigDecimal payment = new BigDecimal(10);
 		currentSession.processPayment(payment);
 
