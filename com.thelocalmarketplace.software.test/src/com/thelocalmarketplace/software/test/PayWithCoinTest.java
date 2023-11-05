@@ -32,12 +32,11 @@ public class PayWithCoinTest {
 	
 	@Before 
 	public void setup() {
+        hardware = new SelfCheckoutStation();
+        hardware.plugIn(PowerGrid.instance());
+        hardware.turnOn(); 
         controller = new SelfCheckoutController(hardware);
         currentSession = new SelfCheckoutSession(hardware, controller);
-        hardware = new SelfCheckoutStation();
-        
-        hardware.plugIn(PowerGrid.instance());
-        hardware.turnOn();
     }
 	
 	@Test
