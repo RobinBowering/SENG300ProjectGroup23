@@ -44,7 +44,7 @@ BarcodeScannerListener {
 	 * Barcode Scanner of associated self checkout machine, representative of hardware
 	 * component
 	 */
-	BarcodeScanner scanner;
+	public BarcodeScanner scanner;
 	/**
 	 * Coin Storage Unit of associated self checkout machine, representative of 
 	 * hardware component
@@ -59,7 +59,7 @@ BarcodeScannerListener {
 	 * Coin Slot of associated self checkout machine, representative of hardware
 	 * component
 	 */
-	CoinSlot coinslot;
+	public CoinSlot coinslot;
 	
 	/**
 	 * Electronic Scale in bagging area of associated self checkout machine, representative of hardware
@@ -75,22 +75,22 @@ BarcodeScannerListener {
 	/**
 	 * The total cost of all items in order
 	 */
-	BigDecimal orderTotal = BigDecimal.ZERO;
+	public BigDecimal orderTotal = BigDecimal.ZERO;
 	
 	/**
 	 * The amount which has been received against the customer's balance through processPayment()
 	 */
-	BigDecimal amountPaid = BigDecimal.ZERO;
+	public BigDecimal amountPaid = BigDecimal.ZERO;
 	
 	/**
 	 * State variable, signaling if the session has an ongoing weight discrepancy
 	 */
-	private boolean weightDiscrepancy = false;
+	public boolean weightDiscrepancy = false;
 	
 	/**
 	 * State variable, signaling if the customer has entered the payment phase (and can no longer add items)
 	 */
-	private boolean payingForOrder = false;
+	public boolean payingForOrder = false;
 
 	// Kelvin's Added variables
 	/**
@@ -115,7 +115,8 @@ BarcodeScannerListener {
 		controller = instantiator;
 		
 		scale = station.baggingArea;
-		scale.enable();
+    scale.enable();
+
 		
 		scanner = station.scanner;
 		scanner.enable();
@@ -131,7 +132,7 @@ BarcodeScannerListener {
 		
 		discrepancyCheck();
 		
-	}
+	} 
 	
 	//method to start the session
 	public void startSession() {
@@ -168,13 +169,13 @@ BarcodeScannerListener {
 	 */
 	public void payWithCoin() {
 		
-		scanner.disable();
+		scanner.disable(); 
 		coinslot.enable();
 		payingForOrder = true;
 		
 		System.out.println("Total: $" + orderTotal.toString());
 		System.out.print("Insert coin(s): ");
-	}
+	}     
 	
 	/**
 	 * Updates amount paid, prints balance if one remains, and ends session if payment is sufficient
@@ -189,8 +190,8 @@ BarcodeScannerListener {
 			
 			coinslot.disable();
 			System.out.println("Payment completed, ending session");
-			controller.sessionEnded();
-			
+			controller.sessionEnded();  
+			 
 			//GUI scene would reset here
 			
 		}
@@ -217,7 +218,7 @@ BarcodeScannerListener {
 		weightDiscrepancy = true;
 		System.out.println("Customer screen: Weight discrepancy detected.");
 		System.out.println("Attendant screen: Weight discrepancy detected.");
-	}
+	} 
 	
 	/**
 	 * Unblocks a blocked session by reenabling scanner, and notes that the issue is resolved
@@ -256,7 +257,10 @@ BarcodeScannerListener {
 			System.out.println("SCALE OVERLOADED. PLEASE REMOVE WEIGHT AND ALERT STAFF");
 			return;
 		}
-		
+		// Ensure that expectedMassOnScale is initialized
+	    if (expectedMassOnScale == null) {
+	        expectedMassOnScale = BigDecimal.ZERO; // Initialize it to zero 
+	    }
 		BigDecimal difference = actualMassOnScale.subtract(expectedMassOnScale).abs();
 		BigDecimal sensitivity = scale.getSensitivityLimit().inGrams();
 		
