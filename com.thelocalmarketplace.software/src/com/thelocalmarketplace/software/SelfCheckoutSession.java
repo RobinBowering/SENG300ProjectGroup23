@@ -101,7 +101,7 @@ BarcodeScannerListener {
 	/**
 	 * Expected mass based on sum of all items in order's mass
 	 */
-	private BigDecimal expectedMassOnScale;
+	private BigDecimal expectedMassOnScale = BigDecimal.ZERO;
 	
 	/**
 	 * Instantiates a Self Checkout Session with all hardware enabled except coinslot
@@ -113,9 +113,9 @@ BarcodeScannerListener {
 	public SelfCheckoutSession(SelfCheckoutStation station, SelfCheckoutController instantiator) {
 		
 		controller = instantiator;
-		
-		scale.enable();
+
 		scale = station.baggingArea; 
+		scale.enable();
 		
 		scanner = station.scanner;
 		scanner.enable();
