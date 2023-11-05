@@ -1,5 +1,3 @@
-
-
 package com.thelocalmarketplace.software;
 
 
@@ -42,7 +40,6 @@ import com.tdc.coin.*;
 public class SelfCheckoutSession implements CoinSlotObserver, CoinValidatorObserver, CoinStorageUnitObserver, ElectronicScaleListener,
 BarcodeScannerListener {
 	
-
 	/**
 	 * Barcode Scanner of associated self checkout machine, representative of hardware
 	 * component
@@ -62,8 +59,7 @@ BarcodeScannerListener {
 	 * Coin Slot of associated self checkout machine, representative of hardware
 	 * component
 	 */
-	CoinSlot coinslot;
-
+	public CoinSlot coinslot;
 	
 	/**
 	 * Electronic Scale in bagging area of associated self checkout machine, representative of hardware
@@ -94,7 +90,7 @@ BarcodeScannerListener {
 	/**
 	 * State variable, signaling if the customer has entered the payment phase (and can no longer add items)
 	 */
-	private boolean payingForOrder = false;
+	public boolean payingForOrder = false;
 
 	// Kelvin's Added variables
 	/**
@@ -118,6 +114,7 @@ BarcodeScannerListener {
 		
 		controller = instantiator;
 		
+		scale = station.baggingArea;
 		scale.enable();
 		
 		scanner = station.scanner;
@@ -179,7 +176,6 @@ BarcodeScannerListener {
 		System.out.print("Insert coin(s): ");
 	}
 	
-
 	/**
 	 * Updates amount paid, prints balance if one remains, and ends session if payment is sufficient
 	 * 
@@ -221,7 +217,6 @@ BarcodeScannerListener {
 		weightDiscrepancy = true;
 		System.out.println("Customer screen: Weight discrepancy detected.");
 		System.out.println("Attendant screen: Weight discrepancy detected.");
-
 	}
 	
 	/**
