@@ -44,7 +44,7 @@ BarcodeScannerListener {
 	 * Barcode Scanner of associated self checkout machine, representative of hardware
 	 * component
 	 */
-	BarcodeScanner scanner;
+	public BarcodeScanner scanner;
 	/**
 	 * Coin Storage Unit of associated self checkout machine, representative of 
 	 * hardware component
@@ -59,7 +59,7 @@ BarcodeScannerListener {
 	 * Coin Slot of associated self checkout machine, representative of hardware
 	 * component
 	 */
-	CoinSlot coinslot;
+	public CoinSlot coinslot;
 	
 	/**
 	 * Electronic Scale in bagging area of associated self checkout machine, representative of hardware
@@ -90,7 +90,7 @@ BarcodeScannerListener {
 	/**
 	 * State variable, signaling if the customer has entered the payment phase (and can no longer add items)
 	 */
-	private boolean payingForOrder = false;
+	public boolean payingForOrder = false;
 
 	// Kelvin's Added variables
 	/**
@@ -114,6 +114,7 @@ BarcodeScannerListener {
 		
 		controller = instantiator;
 		
+		scale = station.baggingArea;
 		scale.enable();
 		
 		scanner = station.scanner;
@@ -255,7 +256,10 @@ BarcodeScannerListener {
 			System.out.println("SCALE OVERLOADED. PLEASE REMOVE WEIGHT AND ALERT STAFF");
 			return;
 		}
-		
+		// Ensure that expectedMassOnScale is initialized
+	    if (expectedMassOnScale == null) {
+	        expectedMassOnScale = BigDecimal.ZERO; // Initialize it to zero 
+	    }
 		BigDecimal difference = actualMassOnScale.subtract(expectedMassOnScale).abs();
 		BigDecimal sensitivity = scale.getSensitivityLimit().inGrams();
 		
