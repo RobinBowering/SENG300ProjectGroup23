@@ -122,6 +122,8 @@ public class AddItemTest {
 	    }
 	
 	//test for discrepancy check  when it doesn't exist
+	//the scanner should not be disabled because there is no discrepancy between expected and actual mass, but it is still called as disabled
+	//but it could be cause i'm not reading the session code properly cause i cant read right now for some reason
 	@Test
 	public void DiscrepancyCheckNoOverload() {
 		session.expectedMassOnScale = BigDecimal.valueOf(100);
