@@ -62,7 +62,7 @@ public class WeightDiscrepancyTest {
         
         SelfCheckoutController controller = new SelfCheckoutController(hardware);
         
-		session = new SelfCheckoutSession(hardware, controller);
+		session = controller.startSession();
 		
 		ProductDatabases.BARCODED_PRODUCT_DATABASE.put(testBarcode1, testProduct1);
 		ProductDatabases.BARCODED_PRODUCT_DATABASE.put(testBarcode2, testProduct2);
@@ -90,15 +90,17 @@ public class WeightDiscrepancyTest {
 		
 		assertTrue(session.weightDiscrepancy);
 	}
+	
+	
 	@Test
 	public void resolveDiscrepancyUnexpectedItem() {
 		hardware.baggingArea.addAnItem(testItem1);
 		hardware.baggingArea.removeAnItem(testItem1);
 		assertFalse(session.weightDiscrepancy);
 	}
+	
 	@Test
-	public void triggerDiscrepancyItemRemoved() {
-		
+	public void triggerDiscrepancyItemRemoved() {		
 	}
 	
 	@After
