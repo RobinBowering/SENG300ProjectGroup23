@@ -276,8 +276,7 @@ BarcodeScannerListener {
 		
 		if (difference.compareTo(sensitivity) <= 0) {
 					weightDiscrepancyEnded();
-			}
-		
+			}		
 	}
 
 	@Override
