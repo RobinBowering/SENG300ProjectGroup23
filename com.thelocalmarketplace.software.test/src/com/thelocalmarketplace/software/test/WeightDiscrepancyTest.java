@@ -6,6 +6,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.math.BigDecimal;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,12 +54,12 @@ public class WeightDiscrepancyTest {
 	BarcodedItem testItem2 = new BarcodedItem(testBarcode2, Mass.ONE_GRAM.sum(Mass.ONE_GRAM));
 	BarcodedProduct testProduct2 = new BarcodedProduct(testBarcode2, "1 ml of Milk", 2, 2);
 	
-	Mass tenKilograms = new Mass(10001);
+	Mass oneHundredKilograms = new Mass(100001);
 	
 	Numeral[] testNumeralArray3 = {Numeral.three} ;
 	Barcode testBarcode3 = new Barcode(testNumeralArray3);
-	BarcodedItem testItem3 = new BarcodedItem(testBarcode2, tenKilograms);
-	BarcodedProduct testProduct3 = new BarcodedProduct(testBarcode2, "brick", 1, 10001);
+	BarcodedItem testItem3 = new BarcodedItem(testBarcode2, oneHundredKilograms);
+	BarcodedProduct testProduct3 = new BarcodedProduct(testBarcode2, "brick", 1, 100001);
 		
 	
 	SelfCheckoutStation hardware;
@@ -114,6 +116,19 @@ public class WeightDiscrepancyTest {
 	
 	@Test
 	public void triggerDiscrepancyItemRemoved() {
+		session.expectedMassOnScale = BigDecimal.valueOf(1);
+		hardware.baggingArea.addAnItem(testItem1);
+		hardware.baggingArea.removeAnItem(testItem1);
+		
+		assertTrue(session.weightDiscrepancy);
+	}
+	
+	@Test
+	public void scaleOverloadTriggersDiscrepancy() {
+		session.expectedMassOnScale = BigDecimal.valueOf(100001);
+		hardware.baggingArea.addAnItem(testItem3);
+		
+		assertTrue(session.weightDiscrepancy);
 	}
 	
 	@After
