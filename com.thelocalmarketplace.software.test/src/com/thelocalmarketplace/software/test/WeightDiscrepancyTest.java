@@ -34,28 +34,30 @@ public class WeightDiscrepancyTest {
 	Numeral[] testNumeralArray1 = {Numeral.one} ;
 	Barcode testBarcode1 = new Barcode(testNumeralArray1);
 	BarcodedItem testItem1 = new BarcodedItem(testBarcode1, Mass.ONE_GRAM);
-	BarcodedProduct testProduct1 = new BarcodedProduct(testBarcode1, "1 ml of Water", 1, Mass.ONE_GRAM.inGrams().doubleValue());
+	BarcodedProduct testProduct1 = new BarcodedProduct(testBarcode1, "1 ml of Water", 1, 1);
 	
 	Numeral[] testNumeralArray2 = {Numeral.two} ;
 	Barcode testBarcode2 = new Barcode(testNumeralArray2);
 	BarcodedItem testItem2 = new BarcodedItem(testBarcode2, Mass.ONE_GRAM.sum(Mass.ONE_GRAM));
-	BarcodedProduct testProduct2 = new BarcodedProduct(testBarcode2, "1 ml of Milk", 2, Mass.ONE_GRAM.sum(Mass.ONE_GRAM).inGrams().
-			doubleValue());
+	BarcodedProduct testProduct2 = new BarcodedProduct(testBarcode2, "1 ml of Milk", 2, 2);
 	
+	Mass tenKilograms = new Mass(10001);
+	
+	Numeral[] testNumeralArray3 = {Numeral.three} ;
+	Barcode testBarcode3 = new Barcode(testNumeralArray3);
+	BarcodedItem testItem3 = new BarcodedItem(testBarcode2, tenKilograms);
+	BarcodedProduct testProduct3 = new BarcodedProduct(testBarcode2, "brick", 1, 10001);
 		
 	
 	SelfCheckoutStation hardware;
 	SelfCheckoutSession session;
 	Coin coin;
 	
-
-	
-	
-	
 	
 	
 	@Before 
 	public void setup() {
+		
 		hardware = new SelfCheckoutStation();
         hardware.plugIn(PowerGrid.instance());
         hardware.turnOn();
